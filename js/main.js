@@ -1,4 +1,4 @@
-fetch("/components/nav.html")
+fetch("components/nav.html")
     .then(res => res.text())
     .then(data => {
         document.getElementById("nav").innerHTML = data;
