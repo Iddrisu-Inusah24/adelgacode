@@ -37,8 +37,8 @@ main {
 
 .logo {
     text-decoration: none;
-    font-weight: 900;
-    font-size: 1.5rem;
+    font-weight: 800;
+    font-size: 1.rem;
     color: #e9074b;
 }
 
@@ -51,7 +51,7 @@ main {
 
 .nav-links a {
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 0.95rem;
     color: #111;
     position: relative;
     transition: color 0.3s ease;
