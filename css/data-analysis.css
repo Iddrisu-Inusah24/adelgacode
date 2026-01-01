@@ -2,8 +2,8 @@
    ROOT & RESET
 ===================== */
 :root {
-    --primary: #acb3c2;      /* Blue */
-    --primary-dark: #aeb5ce;
+    --primary: #2563eb;      /* Blue */
+    --primary-dark: #1e40af;
     --accent: #facc15;       /* Yellow accent */
     --bg: #f8fafc;           /* Light background */
     --text: #0f172a;         /* Dark text */
