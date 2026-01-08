@@ -28,6 +28,7 @@ body {
     font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
                  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: var(--bg);
+    /*background-color: #2e66ac;*/
     color: var(--text);
     line-height: 1.75;
     font-size: 1rem;
@@ -258,52 +259,3 @@ body {
     padding-top: 5.2rem; /* aligns with navbar spacing */
 }
 
-/* =====================
-   CLEAN SIDEBAR (TEXT-ONLY)
-===================== */
-
-.data-sidebar {
-    width: 110px;
-    flex-shrink: 0;
-    padding: 1rem 0;
-    margin-left: 2%;
-    margin-top: 3.5rem;
-    position: sticky;
-    top: 10rem;
-    background: rgb(252, 252, 249);
-}
-
-.data-sidebar h3 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 1.2rem;
-    color: var(--muted);
-}
-
-/* Navigation links */
-.side-nav a {
-    display: block;
-    margin-bottom: 0.8rem;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text);
-    transition: color 0.2s ease;
-}
-
-/* Hover effect */
-.side-nav a:hover {
-    color: var(--primary);
-}
-
-/* Active link */
-.side-nav a.active {
-    color: var(--primary);
-    font-weight: 600;
-}
-.data-layout .page {
-    margin: 0;
-    padding-left: 1%;
-}
