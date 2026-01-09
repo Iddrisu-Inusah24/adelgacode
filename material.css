@@ -1,120 +1,125 @@
-/* =====================
-   MATERIALS PAGE
-===================== */
-.materials-page {
-    max-width: 900px;
+/* ================================
+   GLOBAL MATERIALS LAYOUT
+================================ */
+.materials {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 6rem 1.25rem 3rem; 
+    /* top padding accounts for fixed navbar */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.75;
+    color: #222;
 }
 
-/* =====================
-   HEADER
-===================== */
-.materials-header {
-    margin-bottom: 3.5rem;
-}
-
-.materials-header h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.6rem;
-    color: var(--text);
-}
-
-.materials-header p {
-    color: var(--muted);
-    max-width: 70ch;
-    font-size: 1.5rem;
-}
-
-/* =====================
-   SESSION BLOCK
-===================== */
-.session-block {
+/* ================================
+   INTRO SECTION
+================================ */
+.materials-intro {
     margin-bottom: 3rem;
 }
 
-.session-label {
-    display: inline-block;
-    font-size: 1.9rem;
+.materials-intro h1 {
+    font-size: 2.1rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--primary-dark);
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.75rem;
 }
 
-.session-block h2 {
-    font-size: 1.4rem;
-    margin-bottom: 0.6rem;
-}
-
-.session-text {
-    color: var(--muted);
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-    max-width: 75ch;
-}
-
-/* =====================
-   SUBHEADINGS
-===================== */
-.session-block h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 1.6rem 0 0.6rem;
-    color: var(--text);
-}
-
-/* =====================
-   LISTS
-===================== */
-.session-block ul {
-    padding-left: 1.2rem;
-}
-
-.session-block li {
-    margin-bottom: 0.5rem;
+.materials-intro p {
     font-size: 1.5rem;
+    color: #444;
+    max-width: 780px;
 }
 
-/* =====================
-   DOWNLOADS
-===================== */
-.download-list {
-    list-style: none;
-    padding-left: 0;
-    color: rgb(212, 18, 67);
+/* ================================
+   SESSION / CONTENT SECTION
+================================ */
+.material-section {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 2rem 2rem;
 }
 
-.download-list li {
-    margin-bottom: 0.6rem;
-}
-
-.download-list a {
-    text-decoration: none;
+.material-section h2 {
+    font-size: 1.45rem;
     font-weight: 600;
-    
-    color: var(--primary);
+    margin-bottom: 1rem;
+    color: #111;
 }
 
-.download-list a:hover {
-    text-decoration: underline;
-}
-
-/* =====================
-   DIVIDER
-===================== */
-.section-divider {
-    border: none;
-    border-top: 1px solid #e5e7eb;
-    margin: 3rem 0;
-}
-
-/* =====================
-   MUTED
-===================== */
-.muted {
-    font-weight: 400;
-    color: var(--muted);
+.material-section p {
+    margin-bottom: 1.1rem;
     font-size: 1.5rem;
+    color: #333;
+}
+
+/* Embedded download links */
+.material-section a {
+    color: #0b5ed7;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(11, 94, 215, 0.3);
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.material-section a:hover {
+    color: #084298;
+    border-bottom-color: #084298;
+}
+
+/* ================================
+   FOOTER NOTE
+================================ */
+.materials-note {
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #ddd;
+}
+
+.materials-note p {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+/* ================================
+   MOBILE OPTIMIZATION
+================================ */
+@media (max-width: 768px) {
+
+    .materials {
+        padding: 5.5rem 1rem 2.5rem;
+    }
+
+    .materials-intro h1 {
+        font-size: 1.7rem;
+    }
+
+    .materials-intro p {
+        font-size: 1rem;
+    }
+
+    .material-section {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .material-section h2 {
+        font-size: 1.25rem;
+    }
+
+    .material-section p {
+        font-size: 0.98rem;
+    }
+}
+
+/* ================================
+   VERY SMALL SCREENS
+================================ */
+@media (max-width: 420px) {
+
+    .materials {
+        padding-top: 5rem;
+    }
+
+    .material-section {
+        border-radius: 8px;
+    }
 }
