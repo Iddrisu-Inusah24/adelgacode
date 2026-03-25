@@ -128,12 +128,6 @@ main {
 }
 
 
-
-
-
-
-
-
 /* =========================
    HERO SECTION
 ========================= */
@@ -176,8 +170,6 @@ main {
         order: -1;
     }
 }
-
-
 
 /* HERO TEXT */
 .hero-text h1 {
@@ -294,7 +286,8 @@ main {
 /* the about section */
 .about-preview {
     padding: 4rem 6%;
-    background: #f9faf9;
+    margin-top: 2rem;
+    background: #7d7b4c;
 }
 
 .about-preview-container {
@@ -312,7 +305,7 @@ main {
     line-height: 1.8;
     font-size: 1.5rem;
     margin-bottom: 1.2rem;
-    color: #333;
+    color: #f7f3f3;
     transition-delay: 0.55s;
 }
 
@@ -357,6 +350,8 @@ main {
 
 .contact-page .lead {
     font-size: 1.1rem;
+    line-height: 1.9;
+
     color: #ebe9e9;
     /* max-width: 520px; */
     font-weight: 600;
