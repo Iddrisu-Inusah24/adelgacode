@@ -109,6 +109,7 @@ main {
         flex-direction: column;
         gap: 1.2rem;
         padding: 1.2rem;
+        color: #111;
         border-radius: 10px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 
@@ -119,6 +120,7 @@ main {
     /* ✅ SHOWN WHEN TOGGLED */
     .nav-links.show {
         display: flex;
+        color: #111;
     }
 }
 
