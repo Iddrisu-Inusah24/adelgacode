@@ -93,7 +93,6 @@ main {
     cursor: pointer;
 }
 
-/* ===== MOBILE NAV ===== */
 @media (max-width: 768px) {
 
     .nav-toggle {
@@ -106,23 +105,33 @@ main {
         top: 100%;
         right: 6%;
         background: #3623da;
+
         flex-direction: column;
         gap: 1.2rem;
         padding: 1.2rem;
-        color: #111;
+
         border-radius: 10px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 
-        /* 🔴 HIDDEN BY DEFAULT */
         display: none;
     }
 
-    /* ✅ SHOWN WHEN TOGGLED */
     .nav-links.show {
         display: flex;
-        color: #111;
+    }
+
+    /* 🔑 IMPORTANT: style links directly */
+    .nav-links a {
+        color: #fff;
+        font-weight: 500;
     }
 }
+
+
+
+
+
+
 
 
 /* =========================
