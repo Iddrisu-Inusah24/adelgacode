@@ -122,26 +122,37 @@ main {
 }
 
 
-
-
 /* =========================
    HERO SECTION
 ========================= */
 #hero {
+    position: relative;
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     align-items: center;
     gap: 4rem;
     padding: 6rem 6% 4rem;
-    background: linear-gradient(
-        180deg,
-        rgba(0,0,0,0.02),
-        transparent
-    );
+
+    background: url("logo.jpg") center/cover no-repeat;
+    color: #fff;
 }
 
-/* Stack hero on smaller screens */
+/* Overlay layer */
+#hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 0;
+}
+
+/* Keep content above overlay */
+#hero > * {
+    position: relative;
+    z-index: 1;
+}
+
 @media (max-width: 768px) {
     #hero {
         grid-template-columns: 1fr;
@@ -153,17 +164,20 @@ main {
     }
 }
 
+
+
 /* HERO TEXT */
 .hero-text h1 {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 700;
+    color: white;
     line-height: 1.15;
     margin-bottom: 1.2rem;
 }
 
 .hero-text .subtitle {
     font-size: 1.1rem;
-    color: #444;
+    color: #ebe9e9;
     max-width: 520px;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -171,7 +185,7 @@ main {
 
 .hero-text .support {
     font-size: 1rem;
-    color: #221414;
+    color: #ede7e7;
     max-width: 500px;
     font-weight: 600;
     margin-bottom: 2rem;
@@ -186,28 +200,29 @@ main {
 .hero-buttons .btn {
     text-decoration: none;
     padding: 0.7rem 1.6rem;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.3s ease;
 }
 
 .btn.primary {
-    background: #7c7979;
+    background: #282a0f;
+    border:1px solid #d2df15;
     color: #fff;
 }
 
 .btn.primary:hover {
-    background: #000;
+    background: #30f61e;
 }
 
 .btn.secondary {
-    border: 1px solid #111;
-    color: #111;
+    border: 1px solid #eee425;
+    color: #f7f3f3;
 }
 
 .btn.secondary:hover {
-    background: #111;
+    background: #2d8e17;
     color: #fff;
 }
 
@@ -262,6 +277,8 @@ main {
     transition-delay: 0.55s;
 }
 
+
+/* the about section */
 .about-preview {
     padding: 4rem 6%;
     background: #f9faf9;
@@ -287,6 +304,69 @@ main {
 }
 
 
+/*=============== Bio section============ */
+.contact-page {
+    position: relative;
+    padding: 6rem 6%;
+    
+    /* Background image */
+    background: url("/assets/images/tnx2.jpg") center/cover no-repeat;
+
+    /* Light overlay feel */
+    color: #111;
+}
+
+/* Overlay layer (light, professional) */
+.contact-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(39, 39, 39, 0.85); /* soft white overlay */
+    z-index: 0;
+}
+
+.header-ontop{
+    text-align: center;
+    color: white;
+}
+/* Keep content above overlay */
+.contact-container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+}
+
+/* Typography polish */
+.contact-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.contact-page .lead {
+    font-size: 1.1rem;
+    color: #ebe9e9;
+    /* max-width: 520px; */
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+
+.contact-btn {
+    display: inline-block;
+    padding: 0.9rem 1.8rem;
+    background: #1a0909;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid #eee425;
+    /* border-color: #e9f01a; */
+    transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
 
 /* ===== FOOTER ===== */
 .site-footer {
