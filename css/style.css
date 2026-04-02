@@ -133,13 +133,13 @@ main {
 ========================= */
 #hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 90vh;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     align-items: center;
     gap: 4rem;
+    border-radius: 10px;
     padding: 6rem 6% 4rem;
-
     background: url("logo.jpg") center/cover no-repeat;
     color: #fff;
 }
@@ -151,6 +151,7 @@ main {
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
     z-index: 0;
+    border-radius: 20px;
 }
 
 /* Keep content above overlay */
@@ -175,7 +176,7 @@ main {
 .hero-text h1 {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 700;
-    color: white;
+    color: rgb(242, 238, 16);
     line-height: 1.15;
     margin-bottom: 1.2rem;
 }
@@ -212,8 +213,8 @@ main {
 }
 
 .btn.primary {
-    background: #282a0f;
-    border:1px solid #d2df15;
+    background: #0f2a11;
+    border:2px solid #d2df15;
     color: #fff;
 }
 
@@ -222,7 +223,7 @@ main {
 }
 
 .btn.secondary {
-    border: 1px solid #eee425;
+    border: 2px solid #eee425;
     color: #f7f3f3;
 }
 
@@ -297,6 +298,7 @@ main {
 
 .about-preview h2 {
     font-size: 2rem;
+    color: rgb(242, 238, 16);
     margin-bottom: 1rem;
     transition-delay: 0.55s;
 }
@@ -313,7 +315,7 @@ main {
 /*=============== Bio section============ */
 .contact-page {
     position: relative;
-    padding: 6rem 6%;
+    padding: 4rem 4%;
     
     /* Background image */
     background: url("/assets/images/tnx2.jpg") center/cover no-repeat;
@@ -343,8 +345,12 @@ main {
 }
 
 /* Typography polish */
-.contact-page h1 {
+.contact-page h2 {
     font-size: 2.5rem;
+    color: rgb(243, 243, 9);
+    /* background-color: #eee425; */
+    border: 1px solid #18d8ea;
+    border-radius: 25px;
     margin-bottom: 1rem;
 }
 
@@ -361,18 +367,19 @@ main {
 
 .contact-btn {
     display: inline-block;
-    padding: 0.9rem 1.8rem;
-    background: #1a0909;
+    padding: 0.9rem 2.8rem;
+    background: #2c422c;
+    display: block;
     color: #fff;
+    text-align: center;
     text-decoration: none;
     border-radius: 6px;
     border: 1px solid #eee425;
-    /* border-color: #e9f01a; */
     transition: all 0.3s ease;
 }
 
 .contact-btn:hover {
-    background: #333;
+    background: #333333;
     transform: translateY(-2px);
 }
 
@@ -380,7 +387,7 @@ main {
 .site-footer {
     margin-top: 6rem;
     padding: 3rem 4% 2rem;
-    background: #bfbfc3;
+    background: #4b4b4f;
     border-top: 1px solid #eee;
 }
 
@@ -392,27 +399,27 @@ main {
 
 .footer-name {
     font-size: 1.1rem;
-    color: rgb(4, 0, 0);
+    color:  #cff60a;
     font-weight: 600;
     margin-bottom: 0.3rem;
 }
 
 .footer-role {
     font-size: 0.95rem;
-    color: #010101;
+    color: #fff;
     margin-bottom: 1.5rem;
 }
 
-.footer-socials {
+.footer-socials{
     display: flex;
     justify-content: center;
     gap: 0.4rem;
     margin-bottom: 1.5rem;
 }
 
-.footer-copy {
+.footer-copy{
     font-size: 0.85rem;
-    color: #0b0909;
+    color: #ffff;
 }
 .social:hover {
     transform: translateY(-3px);
