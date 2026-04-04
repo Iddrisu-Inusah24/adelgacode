@@ -43,6 +43,7 @@ main {
     font-size: 1.1rem;
     border: 1px solid #cff60a;
     padding: 2px;
+    background-color: #111;
     color: #cff60a;
 }
 
@@ -359,7 +360,7 @@ main {
 .contact-page .lead {
     font-size: 1.1rem;
     line-height: 1.9;
-
+     text-align: center;
     color: #ebe9e9;
     /* max-width: 520px; */
     font-weight: 600;

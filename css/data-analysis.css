@@ -94,7 +94,7 @@ body {
     font-weight: 700;
     letter-spacing: -0.01em;
     margin-bottom: 0.9rem;
-    color:#3b3d26;
+    color:#0d17e6;
 }
 
 .program-section p,
@@ -232,7 +232,7 @@ body {
     font-weight: 600;
     text-decoration: none;
     transition: background 0.3s ease;
-    box-shadow: 0 6px 15px rgba(250, 204, 21, 0.25);
+    box-shadow: 0 6px 15px rgba(238, 199, 44, 0.25);
 }
 
 .tools-downloads .download-list a:hover {
