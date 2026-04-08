@@ -5,7 +5,7 @@
     --primary: #0f1219;      /* Blue */
     --primary-dark: #070913;
     --accent: #facc15;       /* Yellow accent */
-    --bg: #f8fafc;           /* Light background */
+    --bg: #f9f9f9;           /* Light background */
     --text: #0f172a;         /* Dark text */
     --muted: #475569;
     --card: #ffffff;
@@ -214,35 +214,56 @@ body {
 /* =============================
    DOWNLOAD LINKS
 ============================= */
-.tools-downloads .download-list {
-    list-style: none;
-    margin-top: 1.2rem;
-}
 
-.tools-downloads .download-list li {
-    margin-bottom: 1rem;
-}
 
-.tools-downloads .download-list a {
-    display: inline-block;
-    background: var(--accent);
-    color: var(--text);
-    padding: 0.7rem 1.3rem;
+.download-container {
+
+    background: #585f5f;
     border-radius: var(--radius);
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.3s ease;
-    box-shadow: 0 6px 15px rgba(238, 199, 44, 0.25);
+    padding: 2rem;
+    margin-top: 4rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    display: flex;
+    gap: 3rem;                 /* reduce spacing */
+    flex-wrap: wrap;
+    justify-content: center;   /* center cards horizontally */
+    align-items: stretch;      /* make cards equal height */
+    margin-top: 2rem;
 }
 
-.tools-downloads .download-list a:hover {
-    background: #080cea;
-    color: var(--text);
-    transform: translateY(-2px);
+.download-card {
+    background: #111;
+    padding: 2rem;             /* slightly reduced for balance */
+    color: #fff;
+    border-radius: 12px;
+    width: 260px;
+    text-align: center;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* keeps button aligned nicely */
 }
-/* =====================
-   FIX: CONTENT UNDER NAV (MOBILE)
-===================== */
+
+.download-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.download-card a {
+    display: inline-block;
+    margin-top: auto;   /* pushes button to bottom */
+    padding: 0.6rem 1.2rem;
+    background: #00bcd4;
+    color: #000;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+
+.download-card p {
+    margin: 0.5rem 0 1rem;
+}
+
 @media (max-width: 768px) {
     main.page {
         padding-top: 6rem; /* space for navbar height */
