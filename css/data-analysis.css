@@ -215,7 +215,6 @@ body {
    DOWNLOAD LINKS
 ============================= */
 
-
 .download-container {
 
     background: #585f5f;
@@ -262,6 +261,39 @@ body {
 
 .download-card p {
     margin: 0.5rem 0 1rem;
+}
+
+/* =============================
+   MOBILE RESPONSIVENESS
+============================= */
+
+@media (max-width: 768px) {
+
+    .download-container {
+        flex-direction: column;     /* stack cards vertically */
+        gap: 1.5rem;                /* reduce spacing */
+        padding: 1.5rem;
+    }
+
+    .download-card {
+        width: 100%;                /* full width on mobile */
+        max-width: 350px;           /* keeps it neat */
+        margin: 0 auto;             /* center each card */
+        padding: 1.5rem;
+    }
+
+    .download-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .download-card p {
+        font-size: 0.95rem;
+    }
+
+    .download-card a {
+        width: 100%;                /* full-width button */
+        padding: 0.7rem;
+    }
 }
 
 @media (max-width: 768px) {
