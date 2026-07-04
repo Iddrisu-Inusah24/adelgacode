@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDF 401 - History &amp; Management of Education in Ghana - Mastery Quiz</title>
+<style>
+  :root{
+    --bg1:#0f1729; --bg2:#1a2540; --card:#141d33; --accent:#4f8cff; --accent2:#7c5cff;
+    --good:#2ecf76; --bad:#ff5c6c; --warn:#ffb84f; --text:#eef2ff; --muted:#93a1c7;
+    --border:#2a3757;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:radial-gradient(circle at 20% 0%, #1c2a52 0%, var(--bg1) 55%);
+    color:var(--text); display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .wrap{width:100%; max-width:760px;}
+
+  /* ---------- LOCK SCREEN ---------- */
+  #lockScreen{
+    background:linear-gradient(160deg,var(--card),#101a30);
+    border:1px solid var(--border); border-radius:18px; padding:44px 36px;
+    text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.45);
+  }
+  .lock-icon{
+    width:88px;height:88px;margin:0 auto 18px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;align-items:center;justify-content:center;font-size:32px;
+    overflow:hidden; border:2px solid rgba(255,255,255,.15);
+  }
+  
+  #lockScreen h1{font-size:22px;margin:0 0 6px;}
+  #lockScreen p{color:var(--muted);margin:0 0 26px;font-size:14px;line-height:1.5;}
+  #pwInput{
+    width:100%;padding:14px 16px;border-radius:10px;border:1px solid var(--border);
+    background:#0c1426;color:var(--text);font-size:16px;letter-spacing:2px;text-align:center;
+    outline:none;
+  }
+  #pwInput:focus{border-color:var(--accent);}
+  #unlockBtn{
+    margin-top:14px;width:100%;padding:14px;border:none;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+    font-size:15px;font-weight:600;cursor:pointer;transition:.2s;
+  }
+  #unlockBtn:hover{filter:brightness(1.1);}
+  #pwError{color:var(--bad);font-size:13px;margin-top:12px;min-height:16px;}
+
+  /* ---------- QUIZ APP ---------- */
+  #app{display:none;}
+  .card{
+    background:linear-gradient(160deg,var(--card),#101a30);
+    border:1px solid var(--border); border-radius:18px; padding:30px 28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45); margin-bottom:16px;
+  }
+  header.top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:6px;}
+  header.top h1{font-size:18px;margin:0 0 4px;}
+  header.top p{margin:0;color:var(--muted);font-size:13px;}
+  .badge{
+    font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 10px;border-radius:20px;
+    background:rgba(79,140,255,.15);color:var(--accent);white-space:nowrap;
+  }
+  .progress-outer{height:8px;border-radius:6px;background:#0c1426;overflow:hidden;margin:16px 0 4px;}
+  .progress-inner{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width .3s;}
+  .score-row{display:flex;gap:10px;margin:14px 0 4px;flex-wrap:wrap;}
+  .chip{font-size:12px;padding:5px 10px;border-radius:8px;background:#0c1426;border:1px solid var(--border);color:var(--muted);}
+  .chip b{color:var(--text);}
+
+  #quizBody{padding-top:6px;}
+  .q-diff{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:12px;letter-spacing:.4px;}
+  .diff-1{background:rgba(46,207,118,.15);color:var(--good);}
+  .diff-2{background:rgba(255,184,79,.18);color:var(--warn);}
+  .diff-3{background:rgba(255,92,108,.18);color:var(--bad);}
+  .q-unit{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;}
+  .q-text{font-size:17px;line-height:1.5;margin:0 0 18px;font-weight:600;}
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    text-align:left;padding:14px 16px;border-radius:10px;border:1px solid var(--border);
+    background:#0c1426;color:var(--text);font-size:14.5px;cursor:pointer;transition:.15s;
+    display:flex;align-items:center;gap:10px;
+  }
+  .opt:hover{border-color:var(--accent);background:#0f1930;}
+  .opt .tag{
+    flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);
+  }
+  .opt.correct{border-color:var(--good);background:rgba(46,207,118,.12);}
+  .opt.correct .tag{background:var(--good);color:#08351d;border-color:var(--good);}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,92,108,.12);}
+  .opt.wrong .tag{background:var(--bad);color:#450a10;border-color:var(--bad);}
+  .opt.disabled{cursor:default;pointer-events:none;}
+  .opt.disabled:not(.correct):not(.wrong){opacity:.5;}
+
+  #explainBox{
+    display:none;margin-top:16px;padding:14px 16px;border-radius:10px;
+    background:#0c1426;border-left:3px solid var(--accent);font-size:13.5px;color:var(--muted);line-height:1.55;
+  }
+  #explainBox b{color:var(--text);}
+
+  .nav-row{display:flex;justify-content:flex-end;margin-top:20px;}
+  #nextBtn{
+    padding:12px 26px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-weight:600;font-size:14.5px;cursor:pointer;opacity:.4;pointer-events:none;transition:.2s;
+  }
+  #nextBtn.active{opacity:1;pointer-events:auto;}
+  #nextBtn:hover.active{filter:brightness(1.1);}
+
+  /* ---------- RESULTS ---------- */
+  #resultScreen{display:none;text-align:center;}
+  #resultScreen h2{font-size:24px;margin:0 0 6px;}
+  #resultScreen p.sub{color:var(--muted);margin:0 0 24px;font-size:14px;}
+  .breakdown{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;text-align:left;}
+  .breakdown .b-card{background:#0c1426;border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+  .breakdown .b-card .n{font-size:20px;font-weight:700;}
+  .breakdown .b-card .l{font-size:11.5px;color:var(--muted);}
+  #retryBtn, #reviewBtn{
+    padding:12px 22px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;border:1px solid var(--border);
+    background:#0c1426;color:var(--text);margin:4px;
+  }
+  #retryBtn{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;}
+  .unit-scores{text-align:left;margin-top:6px;}
+  .unit-line{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted);}
+  .unit-line b{color:var(--text);}
+  footer.note{text-align:center;color:var(--muted);font-size:11.5px;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LOCK SCREEN -->
+  <div id="lockScreen">
+    <!-- <div class="lock-icon"><span>&#128274;</span></div> -->
+    <div class="lock-icon"><img src="quiz.png" style="width:100%;height:100%;object-fit:cover;"></div>
+    <h1>Adelga Protected Quiz</h1>
+    <p>EDF 401 - History and Management of Education in Ghana<br>Enter the  to open this quiz.</p>
+    <input type="" id="pwInput" placeholder="Enter " autocomplete="off">
+    <button id="unlockBtn">Unlock Quiz</button>
+    <div id="pwError"></div>
+  </div>
+
+  <!-- QUIZ APP -->
+  <div id="app">
+    <div class="card">
+      <header class="top">
+        <div>
+          <h1>EDF 401 - History &amp; Management of Education in Ghana</h1>
+          <p>Mastery Quiz - 50 Questions · TAE, Nkrumah Era, School Organization &amp; Administration</p>
+        </div>
+        <span class="badge" id="qCounter">Q 1 / 50</span>
+      </header>
+      <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
+      <div class="score-row">
+        <span class="chip">Score: <b id="liveScore">0</b>/50</span>
+        <span class="chip">Streak: <b id="liveStreak">0</b></span>
+        <span class="chip">Accuracy: <b id="liveAcc">0%</b></span>
+      </div>
+    </div>
+
+    <div class="card" id="quizBody">
+      <span class="q-diff" id="qDiff"></span>
+      <div class="q-unit" id="qUnit"></div>
+      <p class="q-text" id="qText"></p>
+      <div class="options" id="qOptions"></div>
+      <div id="explainBox"></div>
+      <div class="nav-row"><button id="nextBtn">Next Question →</button></div>
+    </div>
+
+    <div class="card" id="resultScreen">
+      <h2 id="resultTitle"></h2>
+      <p class="sub" id="resultSub"></p>
+      <div class="breakdown">
+        <div class="b-card"><div class="n" id="rCorrect">0</div><div class="l">Correct answers</div></div>
+        <div class="b-card"><div class="n" id="rWrong">0</div><div class="l">Missed questions</div></div>
+        <div class="b-card"><div class="n" id="rBestStreak">0</div><div class="l">Best streak</div></div>
+        <div class="b-card"><div class="n" id="rAccuracy">0%</div><div class="l">Overall accuracy</div></div>
+      </div>
+      <div class="unit-scores" id="unitScores"></div>
+      <div style="margin-top:22px;">
+        <button id="retryBtn">Retake Quiz</button>
+        <button id="reviewBtn">Review Missed Questions</button>
+      </div>
+    </div>
+
+    <footer class="note">University of Cape Coast · EDF 401 - History and Management of Education in Ghana / School Organization &amp; Administration</footer>
+  </div>
+
+</div>
+
+<script>
+/* =================  GATE ================= */
+const PASSWORD = "adelgacode";
+const pwInput = document.getElementById('pwInput');
+const unlockBtn = document.getElementById('unlockBtn');
+const pwError = document.getElementById('pwError');
+
+function tryUnlock(){
+  if(pwInput.value === PASSWORD){
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    startQuiz();
+  } else {
+    pwError.textContent = "Incorrect password. Please try again.";
+    pwInput.value = '';
+    pwInput.focus();
+  }
+}
+unlockBtn.addEventListener('click', tryUnlock);
+pwInput.addEventListener('keyup', e => { if(e.key === 'Enter') tryUnlock(); });
+
+/* ================= QUESTION BANK ================= */
+// difficulty: 1 = foundational, 2 = applied, 3 = challenging/scenario
+const QUESTIONS = [
+
+// ==================== TRADITIONAL AFRICAN EDUCATION (TAE) ====================
+{unit:"Traditional African Education", diff:1,
+ q:"Traditional African Education (TAE) is best described as:",
+ options:["A formal, literate system introduced by missionaries","A non-specialised, informal, non-literate and practical form of education intended to produce useful persons for self-sufficient communities","A specialised university-level curriculum","A system based purely on written examinations"],
+ correct:1,
+ explain:"<b>TAE</b> refers to the non-specialised, informal, non-literate, practical education given in African societies to produce useful persons for self-sufficient communities."},
+{unit:"Traditional African Education", diff:1,
+ q:"Which philosophical foundation of TAE holds that a child becomes 'communal property' as soon as he/she is born, making upbringing the whole community's role?",
+ options:["Functionalism","Perennialism","Communalism","Preparedness"],
+ correct:2,
+ explain:"<b>Communalism</b> brings the child within, by, and for the community - child upbringing is regarded as a collective community responsibility."},
+{unit:"Traditional African Education", diff:2,
+ q:"A young learner in TAE who is taught farming is also required to learn hunting, house-building, cookery, and food preservation, rather than specialising narrowly. This illustrates which philosophical foundation?",
+ options:["Perennialism","Holisticism (multiple learning)","Functionalism","Communalism"],
+ correct:1,
+ explain:"<b>Holisticism</b> (multiple learning) meant learners had little room to specialise - mastering one skill required learning many related skills as well."},
+{unit:"Traditional African Education", diff:2,
+ q:"According to the course notes, why was unemployment uncommon under TAE?",
+ options:["Because population sizes were small","Because the education provided was functional - knowledge, skills and values imparted were directly relevant to real socioeconomic activities","Because TAE required no work at all","Because TAE only trained a few elite individuals"],
+ correct:1,
+ explain:"Under <b>Functionalism</b>, TAE provided immediate induction into real life, so knowledge and skills were always relevant to what learners would actually do - reducing unemployment."},
+{unit:"Traditional African Education", diff:3,
+ q:"Under TAE's Perennialism, learners were largely viewed as passive recipients unable to contribute to the learning process. How does this contrast with the emphasis of Holisticism, and what shared goal do both still serve?",
+ options:["They contradict each other entirely with no shared goal","Perennialism preserves cultural continuity through passive transmission, while Holisticism actively broadens a learner's skill range - but both serve TAE's goal of producing a complete, functional community member","Holisticism is about passive learning while Perennialism is about active skill-building","There is no meaningful distinction between the two"],
+ correct:1,
+ explain:"<b>Perennialism</b> preserves the status quo/cultural heritage via largely passive transmission, while <b>Holisticism</b> actively broadens the learner's competence across multiple skills - yet both ultimately serve TAE's goal of producing a well-rounded, socially useful individual."},
+
+// ==================== NKRUMAH ERA & POST-INDEPENDENCE REFORM ====================
+{unit:"Nkrumah Era & Post-Independence Reform", diff:1,
+ q:"Who became Ghana's first Minister of Education following the 1951 general elections, declaring 'Education is the keystone of a people's life and happiness'?",
+ options:["Kwame Nkrumah","Kojo Botsio","Kwadwo Dzobo","Rev. C.S. Hassels"],
+ correct:1,
+ explain:"<b>Mr. Kojo Botsio</b> became Ghana's first Minister of Education after the 1951 elections and made this declaration on assuming office."},
+{unit:"Nkrumah Era & Post-Independence Reform", diff:1,
+ q:"The Accelerated Development Plan (ADP) of 1951 called for a basic primary course of how many years, free at public expense?",
+ options:["4 years","6 years","8 years","10 years"],
+ correct:1,
+ explain:"The ADP called for a <b>6-year basic primary course</b> for all children at public expense, with primary school fees abolished from January 1952."},
+{unit:"Nkrumah Era & Post-Independence Reform", diff:2,
+ q:"Which of these was listed as an ADVERSE effect of the ADP of 1951, rather than a positive effect?",
+ options:["Increase in the number of trained teachers","Introduction of fee-free compulsory education","Dilution of the teaching force and lowered academic standards","Increase in public secondary schools from 12 to 38"],
+ correct:2,
+ explain:"Adverse effects included opening schools with adhoc facilities, <b>dilution of the teaching force</b>, and lowered academic standards - despite the ADP's positive gains in enrolment and access."},
+{unit:"Nkrumah Era & Post-Independence Reform", diff:2,
+ q:"The Education Act of 1961 gave the Minister of Education power to do all of the following EXCEPT:",
+ options:["Make regulations concerning examinations and curriculum","Close down unsatisfactory or dangerous schools","Personally appoint every individual teacher in the country","Prohibit the use of a textbook or teaching material in writing"],
+ correct:2,
+ explain:"The Act empowered the Minister over regulations, school closures, and materials, and salaries/discipline were prescribed by regulation - but it did not give the Minister the role of personally appointing every individual teacher."},
+{unit:"Nkrumah Era & Post-Independence Reform", diff:3,
+ q:"Before the Education Act of 1961, which colonial-era document served as the main guiding rule for the development of education in the Gold Coast, and what changed after 1961?",
+ options:["The Dzobo Committee Report of 1987; nothing changed until 1987","Guggisberg's 1925 Education Ordinance; the 1961 Act gave legal backing to the ADP and introduced fee-free education for the entire span of elementary school","The PNDCL 207; supervision was decentralised","The 1987 Education Reforms; CMAs were introduced"],
+ correct:1,
+ explain:"<b>Guggisberg's 1925 Education Ordinance</b> was the main guiding rule until the <b>Education Act of 1961</b>, which gave legal backing to the ADP and introduced fee-free education across the entire elementary school span."},
+{unit:"Nkrumah Era & Post-Independence Reform", diff:3,
+ q:"Critics like Busia argued the ADP consisted of 'ill-digested' proposals driven by political expediency, while Philip (1965) took a more optimistic view. What was Philip's counter-argument?",
+ options:["That rapid expansion should have been abandoned entirely","That an initial downward trend in quality from rapid expansion was expected and did not negate the importance of rapid educational expansion","That the ADP had no effect on educational quality at all","That technical institutes should have received the majority of funding instead"],
+ correct:1,
+ explain:"<b>Philip (1965)</b> argued the temporary dip in quality caused by rapid expansion was an expected trade-off, and did not undermine the overall value of expanding access to education rapidly."},
+
+// ==================== SCHOOL AND COMMUNITY ====================
+{unit:"School and Community", diff:1,
+ q:"According to the course notes, community can be defined in terms of location, structure, and:",
+ options:["Population size","Process","Curriculum","Examination results"],
+ correct:1,
+ explain:"Community is defined in terms of <b>location, structure, and process</b> - covering environment/control, administrative equality of provision, and the management of shared beliefs and values."},
+{unit:"School and Community", diff:2,
+ q:"Which strategy involves an accounting teacher inviting a guest speaker such as the Controller and Accountant-General to interact with students and share real-world issues?",
+ options:["Visit the Community and Participate in Events","Establish Community Building Activities","Set up a Community Resource Map","Involve the Community in Internet Safety Conversations"],
+ correct:1,
+ explain:"<b>Establish Community Building Activities</b> involves bringing guest speakers and real-life experiences into the learning process to strengthen school-community bonds."},
+{unit:"School and Community", diff:2,
+ q:"When schools and communities work together effectively, which outcome is explicitly listed in the course notes?",
+ options:["Increased data costs","Lower incidences of bullying and delinquency","Reduced parental involvement","Higher teacher turnover"],
+ correct:1,
+ explain:"The notes state that when schools and communities work together, students score better grades, skip fewer classes, and there are <b>lower incidences of bullying and delinquency</b>."},
+
+// ==================== SUPERVISION IN GHANAIAN BASIC SCHOOLS ====================
+{unit:"Supervision in Ghanaian Basic Schools", diff:1,
+ q:"Who was appointed as the first inspector of schools in Ghana in 1856, marking an early milestone in the history of supervision?",
+ options:["Rev. C.S. Hassels","Dr. Kwame Nkrumah","Kojo Botsio","Kwadwo Dzobo"],
+ correct:0,
+ explain:"<b>Rev. C.S. Hassels</b> was appointed inspector of schools in 1856, during the colonial government officials' education era (1850–1900)."},
+{unit:"Supervision in Ghanaian Basic Schools", diff:1,
+ q:"Which type of supervision emphasises teacher defects and casts the supervisor as a superior who tells the teacher what and how to change?",
+ options:["Clinical supervision","Traditional supervision","Peer supervision","Self-appraisal"],
+ correct:1,
+ explain:"<b>Traditional supervision</b> emphasised teacher defects and positioned the supervisor as a superior directing change, producing teachers dependent on supervisor direction."},
+{unit:"Supervision in Ghanaian Basic Schools", diff:2,
+ q:"Clinical supervision, in contrast to traditional supervision, is based on the assumption that:",
+ options:["Teachers cannot be trusted to solve their own problems","Teachers possess personal resources within themselves to solve their own problems, emphasising teacher growth","Supervisors should punish underperforming teachers","Supervision should occur only once per year"],
+ correct:1,
+ explain:"<b>Clinical supervision</b> recognises teachers as capable, self-directed professionals who possess the drive and resources to solve their own problems, emphasising growth over control."},
+{unit:"Supervision in Ghanaian Basic Schools", diff:2,
+ q:"Neagley and Evan (1970) classified supervision into internal and external types. Which of the following is an example of EXTERNAL supervision?",
+ options:["A headteacher supervising daily activities within their own school","A circuit supervisor visiting from outside the school to monitor and give guidelines","A teacher reflecting on their own teaching performance","A department head managing subject teachers within the school"],
+ correct:1,
+ explain:"<b>External supervision</b> involves officers from outside the school - such as circuit supervisors, subject officers, and district/regional officers - monitoring and guiding schools."},
+{unit:"Supervision in Ghanaian Basic Schools", diff:2,
+ q:"According to Casio (1989), which type of supervision helps improve worker motivation and reduces defensiveness, but tends to be more lenient, less reliable, and more biased?",
+ options:["Immediate supervision","Peer supervision","Subordinate supervision","Self-appraisal"],
+ correct:3,
+ explain:"<b>Self-appraisal</b> improves motivation and reduces defensiveness but tends toward leniency, lower reliability, and greater bias compared to external judgments."},
+{unit:"Supervision in Ghanaian Basic Schools", diff:3,
+ q:"Gleave (1997) describes four styles of developmental supervision based on a teacher's critical/creative thinking skill and motivation level. Which style suits a teacher who is highly developed in critical and creative teaching but has LOW motivation regarding their present assignment?",
+ options:["Facilitation style","Collaborative style","Negotiating style","Directive style"],
+ correct:2,
+ explain:"The <b>Negotiating style</b> is intended for teachers who are highly skilled/developed but have low motivation toward their current assignment - distinguishing it from the Facilitation style (high skill AND high motivation)."},
+{unit:"Supervision in Ghanaian Basic Schools", diff:3,
+ q:"Goldhammer (1969) identified five stages of clinical supervision. Which correctly orders these stages?",
+ options:["Observation of teaching → Pre-observation conference → Post-conference analysis → Analysis and strategy → Post-observation conference","Pre-observation conference → Observation of teaching → Analysis and strategy → Post-observation conference → Post-conference analysis","Post-observation conference → Pre-observation conference → Observation of teaching → Analysis and strategy → Post-conference analysis","Analysis and strategy → Observation of teaching → Pre-observation conference → Post-conference analysis → Post-observation conference"],
+ correct:1,
+ explain:"Goldhammer's five stages, in order, are: <b>Pre-observation conference → Observation of teaching → Analysis and strategy → Post-observation conference → Post-conference analysis</b>."},
+
+// ==================== SCHOOL ORGANIZATION & MANAGEMENT (Unit 1) ====================
+{unit:"Nature of School Organization & Management", diff:1,
+ q:"POSDCoRB, coined by Gulick and Urwick, stands for Planning, Organizing, Staffing, Directing, Coordinating, Reporting, and:",
+ options:["Budgeting","Building","Bargaining","Branding"],
+ correct:0,
+ explain:"<b>POSDCoRB</b> = Planning, Organizing, Staffing, Directing, Coordinating, Reporting, and <b>Budgeting</b> - the chief executive's core functions."},
+{unit:"Nature of School Organization & Management", diff:1,
+ q:"In the POSDCoRB framework, which function involves interrelating the various parts of school work - such as structuring the timetable to avoid clashes between departments?",
+ options:["Staffing","Directing","Coordinating","Reporting"],
+ correct:2,
+ explain:"<b>Coordinating</b> is the duty of interrelating the various parts of the work - the head acts as coordinator to bring harmony between departments and avoid timetable clashes."},
+{unit:"Nature of School Organization & Management", diff:2,
+ q:"According to the American school of thought on administration vs. management, which statement is correct?",
+ options:["Management is a thinking, top-level function while administration executes plans","Administration is a broader, top-level thinking function (planning, objectives, policy) while management is a doing, lower-level execution function","Both terms are identical with no distinction","Administration only applies to profit-making organizations"],
+ correct:1,
+ explain:"The <b>American school of thought</b> views administration as the broader, top-level thinking function (planning, setting objectives/policy), with management as the lower-level execution/doing function - the reverse of the British view."},
+{unit:"Nature of School Organization & Management", diff:2,
+ q:"Which is a defining characteristic of a FORMAL organization, distinguishing it from an informal one?",
+ options:["Membership arises spontaneously and voluntarily","It is guided by formally established policies, rules, and regulations, with a hierarchy of authority and clearly defined roles","It exists only briefly and dissolves with its members","It has no organizational structure at all"],
+ correct:1,
+ explain:"Formal organizations are guided by <b>established policies, rules, and hierarchy of authority</b>, with clearly defined roles - schools qualify as formal organizations for this reason."},
+{unit:"Nature of School Organization & Management", diff:2,
+ q:"A group of senior teachers and the assistant headmaster, all of similar higher rank, who regularly interact within the same department, best illustrates which type of informal clique?",
+ options:["Horizontal clique","Vertical clique","Mixed clique","Formal clique"],
+ correct:1,
+ explain:"A <b>Vertical clique</b> consists of higher-level employees (e.g., managers/supervisors) who work in the same department - distinct from a horizontal clique of similar-rank workers across areas."},
+{unit:"Nature of School Organization & Management", diff:3,
+ q:"Which of the following is NOT listed among the 'peculiarities' that make educational administration unique compared to other forms of administration?",
+ options:["The cruciality of education to society","Evaluation of results in education is complex and difficult","Educational institutions always generate higher profit margins than other organizations","Education deals directly and intimately with people"],
+ correct:2,
+ explain:"Educational administration's peculiarities include its crucial societal role, difficulty of evaluating outcomes, and its intimate dealings with people - profit margins are not a listed factor, since education is a service, not primarily a profit-driven enterprise."},
+{unit:"Nature of School Organization & Management", diff:3,
+ q:"A school head reconciles conflicting views on 'administration vs. management' by treating top-level planning functions as 'administrative management' and execution-level functions as 'operative management.' Whose framework does this best resemble?",
+ options:["Neagley and Evan's internal/external supervision model","The reconciliation between the American and British schools of thought on administration and management","Griffiths' tripartite classification of decisions","McGregor's Theory X and Theory Y"],
+ correct:1,
+ explain:"This reflects the course's <b>reconciliation of the American and British schools of thought</b>, categorizing management into administrative management (top-level planning) and operative management (execution)."},
+
+// ==================== THEORETICAL FRAMEWORK & SCHOOLS OF MANAGEMENT THOUGHT (Unit 2) ====================
+{unit:"Theoretical Framework of Educational Administration", diff:1,
+ q:"Which function of theory allows researchers to identify gaps in knowledge, pointing to areas where further research is needed?",
+ options:["Explanatory function","Heuristic function","Predictive function","Taxonomic function"],
+ correct:1,
+ explain:"The <b>Heuristic function</b> of theory points out where knowledge is lacking and further research is needed, potentially extending knowledge."},
+{unit:"Theoretical Framework of Educational Administration", diff:1,
+ q:"Frederick Taylor is regarded as the 'Father of' which management approach?",
+ options:["Administrative Management","Scientific Management","Behavioral Management","Systems Approach"],
+ correct:1,
+ explain:"<b>Taylor</b> is regarded as the Father of <b>Scientific Management</b>, which systematically studied worker-task relationships to improve efficiency."},
+{unit:"Theoretical Framework of Educational Administration", diff:2,
+ q:"Which of Fayol's principles of management states that employees should receive orders from only one boss?",
+ options:["Division of Labor","Unity of Command","Centralization","Esprit de Corps"],
+ correct:1,
+ explain:"<b>Unity of Command</b> states employees should have only one boss, ensuring a clear line of accountability."},
+{unit:"Theoretical Framework of Educational Administration", diff:2,
+ q:"In Elton Mayo's Hawthorne Studies, the Illumination Experiment found that worker productivity increased regardless of whether light levels were raised or lowered. What key conclusion did researchers draw from this?",
+ options:["Lighting has no effect on any workplace outcome","Special attention from management increases productivity regardless of actual physical conditions","Workers always prefer dim lighting","Productivity is solely determined by pay rates"],
+ correct:1,
+ explain:"Researchers concluded that <b>special attention from management</b> boosts productivity regardless of the actual physical condition being tested - a foundational insight of the Human Relations Movement."},
+{unit:"Theoretical Framework of Educational Administration", diff:2,
+ q:"Which criticism was specifically leveled against Scientific Management (Taylor's approach)?",
+ options:["It over-emphasised worker creativity and autonomy","It reduced man to the status of a machine and neglected human and ethical aspects of labour","It focused too much on employees' social and psychological needs","It ignored operational-level efficiency entirely"],
+ correct:1,
+ explain:"Critics argued Taylor's approach <b>reduced workers to machines</b>, neglecting human, ethical, and social needs, and ignored higher-level management concerns like planning and decision-making."},
+{unit:"Theoretical Framework of Educational Administration", diff:2,
+ q:"The Bank-Wiring Room Experiment (part of the Hawthorne Studies) found that peer pressure slowed down fast workers and prompted slow workers to keep pace. This result highlights the influence of:",
+ options:["Formal managerial authority alone","Informal groups within an organization","Scientific time-and-motion studies","Government wage regulations"],
+ correct:1,
+ explain:"This experiment emphasised the powerful role of <b>informal groups</b> within an organization in regulating member behaviour, distinct from formal managerial control."},
+{unit:"Theoretical Framework of Educational Administration", diff:3,
+ q:"The Contingency Approach directly challenges which concept proposed by Fayol and other classical writers?",
+ options:["Division of Labor","The concept of 'Universality' - that one best way of managing applies to all situations","Unity of Command","Esprit de Corps"],
+ correct:1,
+ explain:"The <b>Contingency Approach</b> challenges the classical idea of 'Universality' - arguing instead that managerial action must be tailored to the specific situation, since a technique effective in one case may fail in another."},
+{unit:"Theoretical Framework of Educational Administration", diff:3,
+ q:"A school head today emphasizes global citizenship, corporate culture and values, and continuously reinvents the school in response to rapid change. Which management approach does this MOST closely reflect?",
+ options:["Scientific Management","Administrative Management (Fayol)","Dynamic Engagement Approach","Management Science Theory"],
+ correct:2,
+ explain:"The <b>Dynamic Engagement Approach</b> reflects rethinking traditional management in the face of rapid change, incorporating global citizenship, ethics/values, and continual organizational reinvention."},
+
+// ==================== MANAGEMENT ASSUMPTIONS: THEORY X, Y, Z (Unit 3) ====================
+{unit:"Management Assumptions (Theory X, Y, Z)", diff:1,
+ q:"Which theory assumes that the average worker inherently dislikes work and must be coerced, controlled, and threatened with punishment to perform adequately?",
+ options:["Theory X","Theory Y","Theory Z","Contingency Theory"],
+ correct:0,
+ explain:"<b>Theory X</b> portrays a negative view of workers - assuming inherent dislike of work requiring coercion and control to achieve effort."},
+{unit:"Management Assumptions (Theory X, Y, Z)", diff:1,
+ q:"Theory Y assumes that under proper conditions, the average human being will:",
+ options:["Avoid all responsibility permanently","Learn to accept, and even seek, responsibility","Only respond to threats of punishment","Have no capacity for creativity"],
+ correct:1,
+ explain:"<b>Theory Y</b> assumes workers, under the right conditions, not only accept but actively seek responsibility, reflecting a positive view of human motivation."},
+{unit:"Management Assumptions (Theory X, Y, Z)", diff:2,
+ q:"Theory Z, coined by William Ouchi to characterise the Japanese management approach, features which of the following as a main characteristic?",
+ options:["Rapid evaluation and promotion","Highly specialised, narrow career paths","Lifetime employment and collective decision-making","Individual, not collective, responsibility"],
+ correct:2,
+ explain:"<b>Theory Z</b> features lifetime employment (job security), collective decision-making and responsibility, slow evaluation/promotion, and non-specialised career paths."},
+{unit:"Management Assumptions (Theory X, Y, Z)", diff:3,
+ q:"A headteacher who insists on rigid, centralized control and focuses exclusively on productivity, at the expense of teacher wellbeing, is applying assumptions from which theory, and what is the likely downside according to the course?",
+ options:["Theory Y; the downside is excessive worker autonomy","Theory X; the downside is a wrong attitude toward workers and rigid, centralized patterns that ignore their needs","Theory Z; the downside is slow promotion timelines","Theory Y; the downside is over-collaboration"],
+ correct:1,
+ explain:"This reflects <b>Theory X</b> application - rigid patterns, centralized power, and a focus on productivity at workers' expense, reflecting a 'wrong attitude' toward workers as per the course notes."},
+
+// ==================== DECISION MAKING & DELEGATION (Unit 4) ====================
+{unit:"Decision Making & Delegation", diff:1,
+ q:"According to Simon (1960), decisions that are routine, governed by definite rules and procedures, involve low risk, and can be easily delegated are called:",
+ options:["Unprogrammed decisions","Programmed decisions","Creative decisions","Appellate decisions"],
+ correct:1,
+ explain:"<b>Programmed decisions</b> are routine, governed by established rules, low-risk, and easily delegated - unlike unprogrammed decisions, which are novel and non-repetitive."},
+{unit:"Decision Making & Delegation", diff:1,
+ q:"In Griffiths' tripartite classification, a decision called for when subordinates refer a matter to the school administrator for a ruling is termed:",
+ options:["Intermediate Decision","Appellate Decision","Creative Decision","Programmed Decision"],
+ correct:1,
+ explain:"An <b>Appellate Decision</b> arises when subordinates refer matters to the administrator for disposition - distinct from Intermediate decisions (delegated from above) and Creative decisions (initiative-driven improvements)."},
+{unit:"Decision Making & Delegation", diff:2,
+ q:"Lindblom's Theory of Muddling Through is best described as which type of approach to decision-making?",
+ options:["Prescriptive - how executives ought to decide","Descriptive and non-rational - how executives actually decide, often 'satisficing'","A purely mathematical, quantitative model","A theory exclusively about group decision-making"],
+ correct:1,
+ explain:"Lindblom's theory is <b>descriptive and non-rational</b>, showing that administrators often 'satisfice' - settling for a good-enough decision rather than the theoretically optimal one, unlike the prescriptive Classical Decision-Making Model."},
+{unit:"Decision Making & Delegation", diff:2,
+ q:"Which of the following is listed as a reason managers FAIL to delegate?",
+ options:["Excess confidence in subordinates' abilities","Fear that delegating reduces one's own authority","Too much free time available","An organizational culture that strongly rewards delegation"],
+ correct:1,
+ explain:"Listed reasons managers avoid delegating include fear that delegating <b>reduces their own authority</b>, fear of subordinates as competitors, and low confidence in subordinates, among others."},
+{unit:"Decision Making & Delegation", diff:2,
+ q:"When a manager delegates, which THREE things does he do, according to the course notes?",
+ options:["Assigns responsibility, grants authority, and creates accountability for results","Removes responsibility, revokes authority, and eliminates accountability","Only assigns responsibility without granting any authority","Transfers his job entirely to the subordinate"],
+ correct:0,
+ explain:"Delegation involves the manager <b>assigning responsibility (duties), granting authority, and creating accountability (obligation) for results</b>."},
+{unit:"Decision Making & Delegation", diff:3,
+ q:"A headteacher is deciding whether to delegate the task of drafting the school's disciplinary policy. According to the course's guidelines on 'When to Delegate,' which factor would make delegation LESS appropriate?",
+ options:["The task is simple or routine","The task requires maximum exposure and assimilation by employees","The task requires tact and confidentiality that only the head should handle directly","Subordinates' competence and reliability can be trusted"],
+ correct:2,
+ explain:"Tasks requiring significant <b>tact and confidentiality</b> are cited as situations where delegation is more appropriate when relevant, but sensitive matters requiring the head's direct discretion are generally handled with more caution - making this the exception among the delegation-favouring conditions listed."},
+{unit:"Decision Making & Delegation", diff:3,
+ q:"A decision falls within a teacher's 'zone of indifference.' What does this concept, together with the course's guidance on individual vs. group decision-making, best suggest about how such a decision should be handled?",
+ options:["It must always go through full group/participative decision-making regardless of urgency","It can reasonably be made individually by the administrator, since the teacher is likely to accept it without needing to be consulted","It should never be made by any single individual","It requires an emergency response protocol only"],
+ correct:1,
+ explain:"Decisions within a teacher's <b>zone of indifference</b> are ones the teacher will accept without dispute, so administrators can reasonably make these individually - reserving group/participative decision-making for matters outside that zone or requiring buy-in."},
+
+// ==================== ORGANIZATIONAL HEALTH / SCHOOL CLIMATE (Unit 5) ====================
+{unit:"Organizational Health & School Climate", diff:1,
+ q:"Which school climate type is described as having a happy, democratic atmosphere with friendly relations, motivation, and job satisfaction?",
+ options:["The Closed Climate","The Open Climate","The Paternal Climate","The Controlled Climate"],
+ correct:1,
+ explain:"The <b>Open Climate</b> features a happy and democratic atmosphere, friendly relations, and high motivation/job satisfaction."},
+{unit:"Organizational Health & School Climate", diff:1,
+ q:"In which school climate does decision-making tend to be the monopoly of the head, with low cooperation and students looking to the headmaster for virtually everything?",
+ options:["The Autonomous Climate","The Familiar Climate","Paternal Climate","The Open Climate"],
+ correct:2,
+ explain:"The <b>Paternal Climate</b> centralises decision-making with the head, resulting in low cooperation and over-dependence, with discipline often suffering."},
+{unit:"Organizational Health & School Climate", diff:2,
+ q:"A school shows hard work and good results, with teachers cooperating well, but this comes at the expense of social life and general happiness. Which climate type does this describe?",
+ options:["The Controlled Climate","The Familiar Climate","The Closed Climate","The Open Climate"],
+ correct:0,
+ explain:"The <b>Controlled Climate</b> emphasises hard work and good results at the expense of social life - teachers cooperate but are not free or happy."},
+{unit:"Organizational Health & School Climate", diff:2,
+ q:"Which of these is listed as a determinant of organizational climate?",
+ options:["The leadership style employed by the manager","The number of holidays in the school calendar","The color of the school uniform","The distance of the school from the capital city"],
+ correct:0,
+ explain:"Determinants of organizational climate include <b>leadership style</b>, size/structure, communication networks, decision-making practices, and concern for employees, among others."},
+{unit:"Organizational Health & School Climate", diff:3,
+ q:"A school has congenial sociability among staff but struggles to accomplish tasks and meet goals. Which climate type best matches this, and how does it differ from the Controlled Climate?",
+ options:["The Familiar Climate - prioritises sociability over task accomplishment, the opposite emphasis of the Controlled Climate which prioritises task accomplishment over social life","The Closed Climate - both sociability and tasks are neglected equally","The Open Climate - both social life and task accomplishment thrive equally","The Autonomous Climate - leadership dominates over sociability"],
+ correct:0,
+ explain:"The <b>Familiar Climate</b> emphasises congenial sociability at the expense of task accomplishment - the inverse emphasis of the <b>Controlled Climate</b>, which sacrifices social life for task accomplishment."},
+
+// ==================== ADMINISTRATIVE TASKS OF THE SCHOOL HEAD (Unit 7) ====================
+{unit:"Administrative Tasks of the School Head", diff:2,
+ q:"According to the course, a good budget has three aspects: the Educational Aspect, the Control Aspect, and:",
+ options:["The Financial Aspect","The Political Aspect","The Recreational Aspect","The International Aspect"],
+ correct:0,
+ explain:"Asiedu-Akrofi (1978) identifies three aspects of a good budget: the Educational Aspect, the <b>Financial Aspect</b>, and the Control Aspect."},
+{unit:"Administrative Tasks of the School Head", diff:2,
+ q:"Which of these is one of the three administrative competencies/skills required by a school administrator, according to the course?",
+ options:["Technical, conceptual, and human skill","Athletic, artistic, and musical skill","Political, religious, and legal skill","Only conceptual skill is required"],
+ correct:0,
+ explain:"The course identifies <b>Technical skill, Conceptual skill, and Human skill</b> as the core administrative competencies required by a school administrator."},
+
+];
+
+/* ================= QUIZ ENGINE ================= */
+let current = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let answered = false;
+let userAnswers = new Array(QUESTIONS.length).fill(null);
+let missed = [];
+
+function startQuiz(){
+  current = 0; score = 0; streak = 0; bestStreak = 0; answered = false;
+  userAnswers = new Array(QUESTIONS.length).fill(null);
+  missed = [];
+  document.getElementById('quizBody').style.display = 'block';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.querySelector('.card:nth-child(1)').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const q = QUESTIONS[current];
+  document.getElementById('qCounter').textContent = `Q ${current+1} / ${QUESTIONS.length}`;
+  document.getElementById('progressBar').style.width = `${(current/QUESTIONS.length)*100}%`;
+  document.getElementById('qUnit').textContent = q.unit;
+  document.getElementById('qText').textContent = q.q;
+
+  const diffLabel = q.diff === 1 ? 'FOUNDATIONAL' : q.diff === 2 ? 'APPLIED' : 'CHALLENGING';
+  const diffEl = document.getElementById('qDiff');
+  diffEl.textContent = diffLabel;
+  diffEl.className = `q-diff diff-${q.diff}`;
+
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.innerHTML = `<span class="tag">${letters[idx]}</span><span>${opt}</span>`;
+    div.addEventListener('click', () => selectAnswer(idx));
+    optWrap.appendChild(div);
+  });
+
+  document.getElementById('explainBox').style.display = 'none';
+  document.getElementById('nextBtn').classList.remove('active');
+  document.getElementById('nextBtn').textContent = current === QUESTIONS.length - 1 ? 'See Results →' : 'Next Question →';
+  updateScoreRow();
+}
+
+function selectAnswer(idx){
+  if(answered) return;
+  answered = true;
+  const q = QUESTIONS[current];
+  userAnswers[current] = idx;
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach((el, i) => {
+    el.classList.add('disabled');
+    if(i === q.correct) el.classList.add('correct');
+    if(i === idx && idx !== q.correct) el.classList.add('wrong');
+  });
+
+  if(idx === q.correct){
+    score++; streak++; bestStreak = Math.max(bestStreak, streak);
+  } else {
+    streak = 0;
+    missed.push(current);
+  }
+
+  const box = document.getElementById('explainBox');
+  box.innerHTML = `<b>${idx === q.correct ? 'Correct! ' : 'Not quite. '}</b>${q.explain}`;
+  box.style.display = 'block';
+
+  document.getElementById('nextBtn').classList.add('active');
+  updateScoreRow();
+}
+
+function updateScoreRow(){
+  document.getElementById('liveScore').textContent = score;
+  document.getElementById('liveStreak').textContent = streak;
+  const attempted = userAnswers.filter(a => a !== null).length;
+  const acc = attempted ? Math.round((score/attempted)*100) : 0;
+  document.getElementById('liveAcc').textContent = acc + '%';
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if(!answered) return;
+  if(current < QUESTIONS.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+});
+
+function showResults(){
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('quizBody').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+
+  const pct = Math.round((score/QUESTIONS.length)*100);
+  let title, sub;
+  if(pct >= 90){ title = "Outstanding Mastery! 🏆"; sub = "You have a strong command of EDF 401 concepts across all units."; }
+  else if(pct >= 75){ title = "Strong Performance 👏"; sub = "Solid understanding - review the missed items to close the gaps."; }
+  else if(pct >= 50){ title = "Good Start, Keep Reviewing 📘"; sub = "You've grasped the basics. Revisit the units below for a stronger foundation."; }
+  else { title = "More Review Needed 📚"; sub = "Go back through the course notes, especially the units below, then retake the quiz."; }
+
+  document.getElementById('resultTitle').textContent = `${score} / ${QUESTIONS.length} (${pct}%)`;
+  document.getElementById('resultSub').textContent = `${title} ${sub}`;
+  document.getElementById('rCorrect').textContent = score;
+  document.getElementById('rWrong').textContent = QUESTIONS.length - score;
+  document.getElementById('rBestStreak').textContent = bestStreak;
+  document.getElementById('rAccuracy').textContent = pct + '%';
+
+  // Unit breakdown
+  const unitStats = {};
+  QUESTIONS.forEach((q, i) => {
+    if(!unitStats[q.unit]) unitStats[q.unit] = {correct:0,total:0};
+    unitStats[q.unit].total++;
+    if(userAnswers[i] === q.correct) unitStats[q.unit].correct++;
+  });
+  const unitEl = document.getElementById('unitScores');
+  unitEl.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text);">Performance by Unit</div>';
+  Object.keys(unitStats).forEach(u => {
+    const s = unitStats[u];
+    const line = document.createElement('div');
+    line.className = 'unit-line';
+    line.innerHTML = `<span>${u}</span><b>${s.correct}/${s.total}</b>`;
+    unitEl.appendChild(line);
+  });
+}
+
+document.getElementById('retryBtn').addEventListener('click', startQuiz);
+
+document.getElementById('reviewBtn').addEventListener('click', () => {
+  if(missed.length === 0){
+    alert("No missed questions - perfect score!");
+    return;
+  }
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('quizBody').style.display = 'block';
+  const reviewQueue = [...missed];
+  let ri = 0;
+  function renderReview(){
+    if(ri >= reviewQueue.length){
+      showResults();
+      return;
+    }
+    current = reviewQueue[ri];
+    renderQuestion();
+  }
+  document.getElementById('nextBtn').onclick = () => {
+    if(!answered) return;
+    ri++;
+    if(ri < reviewQueue.length){
+      renderReview();
+    } else {
+      document.getElementById('nextBtn').onclick = null;
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        if(!answered) return;
+        if(current < QUESTIONS.length - 1){ current++; renderQuestion(); } else { showResults(); }
+      });
+      showResults();
+    }
+  };
+  renderReview();
+});
+</script>
+</body>
+</html>
