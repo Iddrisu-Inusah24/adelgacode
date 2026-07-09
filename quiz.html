@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Hub — Adelgacode</title>
+<meta name="description" content="Interactive self-test quizzes for education courses — built by Adelgacode.">
+
+<!-- Google Fonts: Fraunces (display serif), Inter (body/UI), IBM Plex Mono (data/meta) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+
+<!-- ============================= NAVIGATION ============================= -->
+<header class="site-header" id="siteHeader">
+  <nav class="nav" aria-label="Primary">
+    <a href="#home" class="nav__brand">
+      <span class="nav__brand-mark">&lt;/&gt;</span>
+      <span class="nav__brand-text">adelgacode <em>Quiz Hub</em></span>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMenu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav__menu" id="navMenu">
+      <li><a href="index.html" class="nav__link" data-nav-link>Home</a></li>
+      <li><a href="#quizzes" class="nav__link" data-nav-link>Quiz Categories</a></li>
+      <li><a href="#about" class="nav__link" data-nav-link>About</a></li>
+      <li><a href="#contact" class="nav__link" data-nav-link>Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============================= HERO ============================= -->
+  <section class="hero" id="home">
+    <div class="hero__ruled-margin" aria-hidden="true"></div>
+    <div class="hero__inner container">
+      <p class="eyebrow">Self-test before the exam does</p>
+      <h1 class="hero__title">
+        Find out what you
+        <span class="highlight-mark">actually know</span>
+      </h1>
+      <p class="hero__subtitle">
+        A growing shelf of short, focused quizzes built from real course notes —
+        EDF 401, ICT-Supported Teaching, EPS 444, EGC 403 and more. Instant scoring,
+        instant feedback, no fluff.
+      </p>
+      <div class="hero__actions">
+        <a href="#quizzes" class="btn btn--primary" data-scroll>
+          Browse the quizzes
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#about" class="btn btn--ghost" data-scroll>How it works</a>
+      </div>
+      <ul class="hero__stats">
+        <li><strong>10+</strong><span>courses covered</span></li>
+        <li><strong>60+</strong><span>questions per quiz</span></li>
+        <li><strong>0</strong><span>signup required</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================= QUIZ CATEGORIES / FILTER ============================= -->
+  <section class="section" id="quizzes">
+    <div class="container">
+      <p class="eyebrow">Interactive Quizzes</p>
+      <h2 class="section__title">Pick a course, test yourself</h2>
+      <p class="section__lede">
+        Every quiz below is self-contained: instant marking, worked explanations,
+        and a breakdown of your performance by topic when you finish.
+      </p>
+
+      <!-- Category filter chips -->
+      <div class="filters" role="tablist" aria-label="Filter quizzes by category">
+        <button class="filter-chip is-active" data-filter="all" role="tab" aria-selected="true">All quizzes</button>
+        <button class="filter-chip" data-filter="foundations" role="tab" aria-selected="false">Education Foundations</button>
+        <button class="filter-chip" data-filter="ict" role="tab" aria-selected="false">ICT &amp; Pedagogy</button>
+        <button class="filter-chip" data-filter="guidance" role="tab" aria-selected="false">Guidance &amp; Counselling</button>
+        <button class="filter-chip" data-filter="management" role="tab" aria-selected="false">School Management</button>
+      </div>
+
+      <!-- ======= QUIZ CARD GRID =======
+           To add a new quiz: duplicate one <article class="quiz-card"> block
+           and edit its content. The grid and layout adjust automatically. -->
+      <div class="quiz-grid" id="quizGrid">
+
+        <!-- Quiz Card 1 -->
+        <article class="quiz-card" data-category="ict">
+          <div class="quiz-card__tab quiz-card__tab--medium">Medium</div>
+          <p class="quiz-card__category">ICT &amp; Pedagogy</p>
+          <h3 class="quiz-card__title">ICT-Supported Teaching &amp; Learning Strategies</h3>
+          <p class="quiz-card__desc">
+            Covers ICT eras, learning theories (constructivism, connectivism),
+            TPACK, SAMR, digital tools, AI in education, and inclusive digital learning.
+          </p>
+          <details class="quiz-card__objectives">
+            <summary>Learning objectives</summary>
+            <ul>
+              <li>Distinguish SAMR levels from real classroom examples</li>
+              <li>Apply TAM and TPACK to integration decisions</li>
+              <li>Identify challenges and strategies for ICT adoption</li>
+            </ul>
+          </details>
+          <div class="quiz-card__meta">
+            <span title="Estimated time">⏱ 45–60 min</span>
+            <span title="Number of questions">❓ 61 questions</span>
+          </div>
+
+          <!-- ============================================================
+               START QUIZ LINK — replace href="#" below with your quiz URL,
+               or swap the <a> for an <iframe src="YOUR_QUIZ_LINK"></iframe>
+               to embed the quiz directly on this page.
+          ============================================================= -->
+          <a href="#" class="quiz-btn">Start Quiz</a>
+        </article>
+
+        <!-- Quiz Card 2 -->
+        <article class="quiz-card" data-category="foundations">
+          <div class="quiz-card__tab quiz-card__tab--hard">Challenging</div>
+          <p class="quiz-card__category">Education Foundations</p>
+          <h3 class="quiz-card__title">EDF 401 — History &amp; Management of Education in Ghana</h3>
+          <p class="quiz-card__desc">
+            Traditional African Education, the Nkrumah era and Education Act 1961,
+            supervision in Ghanaian schools, and school management theory.
+          </p>
+          <details class="quiz-card__objectives">
+            <summary>Learning objectives</summary>
+            <ul>
+              <li>Trace Ghana's education policy from ADP 1951 to the 1961 Act</li>
+              <li>Compare traditional vs. clinical supervision</li>
+              <li>Apply Theory X, Y and Z to school leadership scenarios</li>
+            </ul>
+          </details>
+          <div class="quiz-card__meta">
+            <span title="Estimated time">⏱ 40–55 min</span>
+            <span title="Number of questions">❓ 54 questions</span>
+          </div>
+
+          <!-- START QUIZ LINK — replace href="#" with your quiz URL -->
+          <a href="#" class="quiz-btn">Start Quiz</a>
+        </article>
+
+        <!-- Quiz Card 3 -->
+        <article class="quiz-card" data-category="guidance">
+          <div class="quiz-card__tab quiz-card__tab--easy">Foundational</div>
+          <p class="quiz-card__category">Guidance &amp; Counselling</p>
+          <h3 class="quiz-card__title">EGC 403 — Guidance &amp; Counselling</h3>
+          <p class="quiz-card__desc">
+            Client-centred therapy, rational emotive therapy, and the stages of
+            the counselling process, with scenario-based application questions.
+          </p>
+          <details class="quiz-card__objectives">
+            <summary>Learning objectives</summary>
+            <ul>
+              <li>Differentiate counselling approaches and their techniques</li>
+              <li>Sequence the stages of the counselling process correctly</li>
+              <li>Identify the roles of guidance functionaries in schools</li>
+            </ul>
+          </details>
+          <div class="quiz-card__meta">
+            <span title="Estimated time">⏱ 25–35 min</span>
+            <span title="Number of questions">❓ 30 questions</span>
+          </div>
+
+          <!-- START QUIZ LINK — replace href="#" with your quiz URL -->
+          <a href="#" class="quiz-btn">Start Quiz</a>
+        </article>
+
+        <!-- Quiz Card 4 -->
+        <article class="quiz-card" data-category="management">
+          <div class="quiz-card__tab quiz-card__tab--medium">Medium</div>
+          <p class="quiz-card__category">School Management</p>
+          <h3 class="quiz-card__title">School Organisation &amp; Administration in Ghana</h3>
+          <p class="quiz-card__desc">
+            POSDCoRB, schools of management thought, decision-making theories,
+            delegation, and organisational health / school climate types.
+          </p>
+          <details class="quiz-card__objectives">
+            <summary>Learning objectives</summary>
+            <ul>
+              <li>Map POSDCoRB functions to real headteacher duties</li>
+              <li>Classify decisions using Griffiths' tripartite model</li>
+              <li>Identify school climate types from behavioural cues</li>
+            </ul>
+          </details>
+          <div class="quiz-card__meta">
+            <span title="Estimated time">⏱ 35–45 min</span>
+            <span title="Number of questions">❓ 40 questions</span>
+          </div>
+
+          <!-- START QUIZ LINK — replace href="#" with your quiz URL -->
+          <a href="#" class="quiz-btn">Start Quiz</a>
+        </article>
+
+        <!-- Quiz Card 5 -->
+        <article class="quiz-card" data-category="foundations">
+          <div class="quiz-card__tab quiz-card__tab--hard">Challenging</div>
+          <p class="quiz-card__category">Education Foundations</p>
+          <h3 class="quiz-card__title">EPS 444 — Teacher Education &amp; Professional Standards</h3>
+          <p class="quiz-card__desc">
+            Ghana's National Teachers' Standards, the role of the NTC, and the
+            professional values expected of a licensed teacher.
+          </p>
+          <details class="quiz-card__objectives">
+            <summary>Learning objectives</summary>
+            <ul>
+              <li>Recall the domains of the National Teachers' Standards</li>
+              <li>Explain the NTC's role in licensing and accountability</li>
+              <li>Apply professional values to classroom scenarios</li>
+            </ul>
+          </details>
+          <div class="quiz-card__meta">
+            <span title="Estimated time">⏱ 30–40 min</span>
+            <span title="Number of questions">❓ 35 questions</span>
+          </div>
+
+          <!-- START QUIZ LINK — replace href="#" with your quiz URL -->
+          <a href="#" class="quiz-btn">Start Quiz</a>
+        </article>
+
+        <!-- ============================================================
+             TEMPLATE — duplicate this block to add a brand-new quiz card.
+             It is hidden by default (display:none via .quiz-card--template);
+             remove that class once you fill it in.
+        ============================================================= -->
+        <article class="quiz-card quiz-card--template" data-category="all">
+          <div class="quiz-card__tab quiz-card__tab--easy">Difficulty</div>
+          <p class="quiz-card__category">Category</p>
+          <h3 class="quiz-card__title">New Quiz Title</h3>
+          <p class="quiz-card__desc">Short description of what this quiz covers.</p>
+          <details class="quiz-card__objectives">
+            <summary>Learning objectives</summary>
+            <ul>
+              <li>Objective one</li>
+              <li>Objective two</li>
+            </ul>
+          </details>
+          <div class="quiz-card__meta">
+            <span>⏱ 00 min</span>
+            <span>❓ 00 questions</span>
+          </div>
+          <a href="#" class="quiz-btn">Start Quiz</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= ABOUT THE QUIZZES ============================= -->
+  <section class="section section--tint" id="about">
+    <div class="container container--narrow">
+      <p class="eyebrow">About the quizzes</p>
+      <h2 class="section__title">Built from the actual course material</h2>
+      <p class="section__lede">
+        Each quiz on this page is written directly from lecture slides, course
+        outlines and past coursework — not generic trivia. Questions move from
+        foundational recall to applied, scenario-based reasoning, so a high
+        score genuinely reflects a working understanding of the topic, not
+        lucky guessing. Every question comes with a short explanation, so a
+        wrong answer still teaches you something before you move on.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================= INSTRUCTIONS ============================= -->
+  <section class="section" id="instructions">
+    <div class="container">
+      <p class="eyebrow">Before you start</p>
+      <h2 class="section__title">How to take a quiz</h2>
+
+      <ol class="instructions-list">
+        <li>
+          <span class="instructions-list__num">01</span>
+          <div>
+            <h3>Complete one quiz at a time</h3>
+            <p>Finish a full attempt before opening another — your progress and score are tracked per session.</p>
+          </div>
+        </li>
+        <li>
+          <span class="instructions-list__num">02</span>
+          <div>
+            <h3>Read every question carefully</h3>
+            <p>Several questions are scenario-based and deliberately test close reading, not just recognition.</p>
+          </div>
+        </li>
+        <li>
+          <span class="instructions-list__num">03</span>
+          <div>
+            <h3>Submit before leaving</h3>
+            <p>Closing the tab mid-quiz means losing your progress — submit your final answer before navigating away.</p>
+          </div>
+        </li>
+        <li>
+          <span class="instructions-list__num">04</span>
+          <div>
+            <h3>Review your answers where possible</h3>
+            <p>Use the review screen at the end to see what you missed and read the explanation before retaking.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================= FAQ ============================= -->
+  <section class="section section--tint" id="faq">
+    <div class="container container--narrow">
+      <p class="eyebrow">Frequently asked questions</p>
+      <h2 class="section__title">Still have a question?</h2>
+
+      <div class="accordion" id="faqAccordion">
+
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="false">
+            <span>Do I need to create an account to take a quiz?</span>
+            <svg class="accordion__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="accordion__panel">
+            <p>No. Every quiz opens instantly — no signup, no login. Your results
+            are shown to you at the end of the attempt.</p>
+          </div>
+        </div>
+
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="false">
+            <span>Can I retake a quiz?</span>
+            <svg class="accordion__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="accordion__panel">
+            <p>Yes. Each quiz includes a "Retake Quiz" option once you finish,
+            and questions are shuffled so a retake is not just memorisation.</p>
+          </div>
+        </div>
+
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="false">
+            <span>Are new quizzes added regularly?</span>
+            <svg class="accordion__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="accordion__panel">
+            <p>Yes — this page is built so a new quiz card can be added for
+            every course as it's written, without changing the rest of the layout.</p>
+          </div>
+        </div>
+
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="false">
+            <span>I found an error in a quiz question. Who do I tell?</span>
+            <svg class="accordion__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="accordion__panel">
+            <p>Please use the contact section below — include the quiz name and
+            the question text so it can be checked and corrected quickly.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= CONTACT / SUPPORT ============================= -->
+  <section class="section" id="contact">
+    <div class="container container--narrow">
+      <div class="contact-card">
+        <div>
+          <p class="eyebrow">Need help?</p>
+          <h2 class="section__title">Get in touch</h2>
+          <p class="section__lede">
+            Stuck on a quiz, spotted an error, or want a new course added?
+            Reach out and it'll be picked up directly.
+          </p>
+        </div>
+        <div class="contact-card__actions">
+          <a href="mailto:hello@adelgacode.com" class="btn btn--primary">Email support</a>
+          <a href="#" class="btn btn--ghost">Message on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+
+    <div class="site-footer__brand">
+      <span class="nav__brand-mark">&lt;/&gt;</span>
+      <span class="nav__brand-text">adelgacode <em>Quiz Hub</em></span>
+      <p>Practical, well-built study tools for education students.</p>
+    </div>
+
+    <div class="site-footer__col">
+      <h4>Quick links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#quizzes">Quiz Categories</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@adelgacode.com">hello@adelgacode.com</a></li>
+        <li>University of Cape Coast</li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h4>Follow</h4>
+      <ul class="site-footer__social">
+        <li><a href="#" aria-label="Twitter / X">Twitter</a></li>
+        <li><a href="#" aria-label="Instagram">Instagram</a></li>
+        <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="site-footer__bottom container">
+    <p>&copy; <span id="year"></span> adelgacode. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+    <path d="M9 14V4M4 9l5-5 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script src="quiz.js"></script>
+</body>
+</html>
