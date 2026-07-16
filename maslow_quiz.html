@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maslow's Hierarchy of Needs — Quiz</title>
+<style>
+  :root{
+    --bg: #2b2420;
+    --panel: #352c26;
+    --paper: #f4ecdf;
+    --ink: #2b2420;
+    --gold: #c8923f;
+    --clay: #b5573a;
+    --moss: #6f7d4f;
+    --line: #4a3f36;
+    --muted: #a89a8a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    background: var(--bg);
+    color: var(--paper);
+    padding: 28px 16px 60px;
+  }
+  .wrap{ max-width: 760px; margin: 0 auto; }
+  header{
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .eyebrow{
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 11px;
+    color: var(--gold);
+    font-family: Georgia, serif;
+    margin-bottom: 6px;
+  }
+  h1{
+    font-size: 28px;
+    margin: 0 0 6px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .sub{ color: var(--muted); font-size: 14px; font-style: italic; }
+  .pyramid-strip{
+    display:flex;
+    gap:4px;
+    margin: 16px 0 4px;
+    font-size: 10px;
+    text-align:center;
+  }
+  .pyramid-strip div{
+    padding: 6px 4px;
+    border-radius: 3px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .lvl1{background:#8a9b6a; flex:5;}
+  .lvl2{background:#a6a05c; flex:4;}
+  .lvl3{background:#c8923f; flex:3;}
+  .lvl4{background:#b5573a; flex:2;}
+  .lvl5{background:#7a4a3a; flex:1; color:var(--paper);}
+
+  .q{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .q-num{
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .q-text{
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .opts{ display:flex; flex-direction:column; gap:8px; }
+  label.opt{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding: 9px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    cursor:pointer;
+    font-size: 14.5px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  label.opt:hover{ background: #40362e; border-color: var(--gold); }
+  label.opt input{ margin-top: 3px; accent-color: var(--gold); }
+  label.opt.correct{ border-color: var(--moss); background: rgba(111,125,79,0.25); }
+  label.opt.incorrect{ border-color: var(--clay); background: rgba(181,87,58,0.25); }
+
+  .feedback{
+    margin-top: 10px;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback.right{ background: rgba(111,125,79,0.2); color: #cfe0b0; }
+  .feedback.wrong{ background: rgba(181,87,58,0.2); color: #f0c3b0; }
+
+  .actions{
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+    padding: 18px 0 6px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+  }
+  button{
+    font-family: Georgia, serif;
+    font-size: 15px;
+    padding: 12px 28px;
+    border-radius: 4px;
+    border: none;
+    cursor:pointer;
+    font-weight:700;
+    letter-spacing: 0.02em;
+  }
+  #submitBtn{ background: var(--gold); color: var(--ink); }
+  #submitBtn:hover{ background: #d6a456; }
+  #resetBtn{ background: transparent; border: 1px solid var(--muted); color: var(--paper); display:none; }
+  #resetBtn:hover{ border-color: var(--gold); color: var(--gold); }
+
+  #scoreBoard{
+    display:none;
+    text-align:center;
+    background: var(--panel);
+    border: 2px solid var(--gold);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 22px;
+  }
+  #scoreBoard.show{ display:block; }
+  #scoreBoard .big{
+    font-size: 36px;
+    font-weight:700;
+    color: var(--gold);
+  }
+  #scoreBoard .label{ color: var(--muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">EGC 403 · Unit V · Self-Assessment</div>
+    <h1>Maslow's Hierarchy of Needs</h1>
+    <div class="sub">20 questions drawn from the Organisation &amp; Administration unit. Answer all, then check your score.</div>
+    <div class="pyramid-strip">
+      <div class="lvl1">Physical</div>
+      <div class="lvl2">Safety</div>
+      <div class="lvl3">Love/Belonging</div>
+      <div class="lvl4">Self-Esteem</div>
+      <div class="lvl5">Self-Actualisation</div>
+    </div>
+  </header>
+
+  <div id="scoreBoard">
+    <div class="label">Your Score</div>
+    <div class="big" id="scoreText">0 / 20</div>
+    <div id="scoreMsg" style="margin-top:6px; color: var(--paper);"></div>
+  </div>
+
+  <form id="quizForm"></form>
+
+  <div class="actions">
+    <button type="button" id="submitBtn">Submit Answers</button>
+    <button type="button" id="resetBtn">Try Again</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Who proposed the classification of human needs referenced in Unit V's planning section?",
+    opts: ["Carl Rogers", "Abraham Maslow", "Albert Ellis", "Shertzer and Stone"],
+    correct: 1,
+    why: "The text states: 'Maslow (1954) classified human needs as...' five levels."
+  },
+  {
+    q: "In what year did Maslow classify human needs as cited in the document?",
+    opts: ["1947", "1954", "1961", "1976"],
+    correct: 1,
+    why: "Maslow (1954) is the citation given in the text."
+  },
+  {
+    q: "How many levels of needs did Maslow identify, according to the document?",
+    opts: ["Three", "Four", "Five", "Six"],
+    correct: 2,
+    why: "Five levels: Physical/Survival, Safety/Security, Social/Love and Belonging, Self-Respect/Esteem, Personal Growth/Self-Actualisation."
+  },
+  {
+    q: "Which is the FIRST (most basic) level in Maslow's classification as listed?",
+    opts: ["Safety or Security needs", "Physical/Survival needs", "Social or Love and Belonging needs", "Self-Esteem needs"],
+    correct: 1,
+    why: "Physical/Survival needs are listed first — 'basic needs for which there are no substitutes.'"
+  },
+  {
+    q: "Physical/Survival needs are described in the text as:",
+    opts: [
+      "Needs for freedom from fear and anxiety",
+      "Basic needs for which there are no substitutes",
+      "A sense of belonging in the community",
+      "A desire to grow to one's fullest potential"
+    ],
+    correct: 1,
+    why: "Direct quote from the text describing Physical/Survival needs."
+  },
+  {
+    q: "'Freedom from fear and anxiety' best describes which level?",
+    opts: ["Physical needs", "Safety or Security needs", "Self-Respect needs", "Self-Actualisation"],
+    correct: 1,
+    why: "The text defines Safety/Security needs as the need for freedom from fear and anxiety."
+  },
+  {
+    q: "Which level gives 'a sense that we are loved and have a place in the community'?",
+    opts: ["Physical needs", "Safety needs", "Social or Love and Belonging needs", "Self-Esteem needs"],
+    correct: 2,
+    why: "This is the exact description given for Social/Love and Belonging needs."
+  },
+  {
+    q: "Self-Respect/Personal Dignity/Self-Esteem needs give one a sense of:",
+    opts: [
+      "Food and shelter",
+      "Independence and confidence",
+      "Belonging to a clan",
+      "Freedom from disease"
+    ],
+    correct: 1,
+    why: "The text states these needs give 'a sense of independence and confidence.'"
+  },
+  {
+    q: "Which level is described as 'A sense of satisfaction with one's self which reflects the individual's desire to grow and develop to his or her fullest potential'?",
+    opts: ["Safety needs", "Social needs", "Self-Esteem needs", "Personal Growth/Self-Actualisation"],
+    correct: 3,
+    why: "This is the verbatim description of Personal Growth/Self-Actualisation in the document."
+  },
+  {
+    q: "According to the text, what happens when an individual's general needs are met?",
+    opts: [
+      "They become dependent on the counsellor",
+      "They can develop the talents and gifts within them and achieve their highest level of personal growth",
+      "They no longer require guidance services",
+      "They automatically achieve self-actualisation"
+    ],
+    correct: 1,
+    why: "The text states that when needs are met, the individual can develop talents/gifts and achieve personal growth."
+  },
+  {
+    q: "What example does the text give of a child affected by an unmet physiological need?",
+    opts: [
+      "The child may become a class prefect",
+      "The child may steal or be uncomfortable enough to learn well",
+      "The child may join a debate club",
+      "The child may seek vocational placement"
+    ],
+    correct: 1,
+    why: "The text: 'unmet physiological need like the need for food can lead a child to steal or the child may not be comfortable enough to learn well.'"
+  },
+  {
+    q: "In the document's activity, 'Food' is matched to which need category number?",
+    opts: ["Category 1 (Physical Needs)", "Category 2 (Safety)", "Category 3 (Social)", "Category 4 (Self-Esteem)"],
+    correct: 0,
+    why: "The worked example explicitly states 'Food = 1 (meaning, food is a physical need).'"
+  },
+  {
+    q: "In the activity's numbering, which category number represents Social Needs/Love and Belonging?",
+    opts: ["1", "2", "3", "4"],
+    correct: 2,
+    why: "Maslow's five needs are numbered 1–5; Social/Love and Belonging is number 3."
+  },
+  {
+    q: "Which need category number represents Personal Growth/Self-Actualisation in the activity?",
+    opts: ["2", "3", "4", "5"],
+    correct: 3,
+    why: "Self-Actualisation is the fifth and final category, numbered 5."
+  },
+  {
+    q: "Under which acronym does Unit V say a school guidance programme should be characterised, immediately before introducing Maslow's needs?",
+    opts: ["SMART", "PLEA", "SWOT", "GROW"],
+    correct: 1,
+    why: "Hill and Lukey (1969): the programme should be Planned, Led, Executed, Assessed (PLEA)."
+  },
+  {
+    q: "The Maslow needs discussion appears under which broader planning step in Unit V?",
+    opts: ["Leading", "Execution", "Planning", "Assessment"],
+    correct: 2,
+    why: "Maslow's needs are introduced within the 'Planning' section, as the counsellor needs 'a general idea of human needs.'"
+  },
+  {
+    q: "'War' and 'Sickness and disease' in the activity's list of needs most likely relate to a LACK of which need category?",
+    opts: ["Physical needs", "Safety or Security needs", "Self-Esteem needs", "Self-Actualisation"],
+    correct: 1,
+    why: "War and sickness/disease threaten freedom from fear, anxiety, and harm — the Safety/Security category."
+  },
+  {
+    q: "'Recognition by community' and 'Long service award' in the activity best fit which Maslow category?",
+    opts: ["Physical needs", "Safety needs", "Social needs", "Self-Esteem needs"],
+    correct: 3,
+    why: "Recognition and awards relate to Self-Respect/Personal Dignity/Self-Esteem needs."
+  },
+  {
+    q: "'Membership of religious body' and 'Clan membership' best illustrate which need category?",
+    opts: ["Physical needs", "Social or Love and Belonging needs", "Self-Esteem needs", "Self-Actualisation"],
+    correct: 1,
+    why: "These reflect belonging to a group/community, matching Social/Love and Belonging needs."
+  },
+  {
+    q: "Why is it important for a school counsellor to understand Maslow's needs when planning a guidance programme?",
+    opts: [
+      "It helps the counsellor diagnose mental illness in students",
+      "It helps the counsellor understand how unmet needs can affect a student's academic work and behaviour",
+      "It replaces the need for a needs-assessment survey",
+      "It is required only for vocational placement"
+    ],
+    correct: 1,
+    why: "The text links unmet needs directly to negative effects on a child's academic work, justifying the counsellor's need to understand them during planning."
+  }
+];
+
+const form = document.getElementById('quizForm');
+let userAnswers = new Array(questions.length).fill(null);
+
+function render(){
+  form.innerHTML = '';
+  questions.forEach((item, qi) => {
+    const block = document.createElement('div');
+    block.className = 'q';
+    block.innerHTML = `
+      <div class="q-num">Question ${qi+1} of ${questions.length}</div>
+      <div class="q-text">${item.q}</div>
+      <div class="opts" id="opts-${qi}"></div>
+      <div class="feedback" id="fb-${qi}"></div>
+    `;
+    const optsWrap = block.querySelector(`#opts-${qi}`);
+    item.opts.forEach((opt, oi) => {
+      const lbl = document.createElement('label');
+      lbl.className = 'opt';
+      lbl.id = `opt-${qi}-${oi}`;
+      lbl.innerHTML = `<input type="radio" name="q${qi}" value="${oi}"> <span>${opt}</span>`;
+      lbl.querySelector('input').addEventListener('change', () => {
+        userAnswers[qi] = oi;
+      });
+      optsWrap.appendChild(lbl);
+    });
+    form.appendChild(block);
+  });
+}
+
+function grade(){
+  let score = 0;
+  questions.forEach((item, qi) => {
+    const fb = document.getElementById(`fb-${qi}`);
+    const chosen = userAnswers[qi];
+    for(let oi=0; oi<item.opts.length; oi++){
+      const lbl = document.getElementById(`opt-${qi}-${oi}`);
+      lbl.querySelector('input').disabled = true;
+      if(oi === item.correct){
+        lbl.classList.add('correct');
+      } else if(oi === chosen){
+        lbl.classList.add('incorrect');
+      }
+    }
+    fb.classList.add('show');
+    if(chosen === item.correct){
+      score++;
+      fb.classList.add('right');
+      fb.textContent = 'Correct — ' + item.why;
+    } else {
+      fb.classList.add('wrong');
+      fb.textContent = (chosen === null ? 'Not answered. ' : 'Not quite. ') + item.why;
+    }
+  });
+
+  const board = document.getElementById('scoreBoard');
+  const scoreText = document.getElementById('scoreText');
+  const scoreMsg = document.getElementById('scoreMsg');
+  scoreText.textContent = `${score} / ${questions.length}`;
+  let msg = '';
+  const pct = Math.round((score/questions.length)*100);
+  if(pct >= 90) msg = "Excellent grasp of Maslow's hierarchy as presented in Unit V.";
+  else if(pct >= 70) msg = "Good understanding — review the missed items above.";
+  else if(pct >= 50) msg = "Fair attempt — re-read the Maslow section and the needs-matching activity.";
+  else msg = "Worth revisiting the Maslow's hierarchy section closely before moving on.";
+  scoreMsg.textContent = `${pct}% — ${msg}`;
+  board.classList.add('show');
+  board.scrollIntoView({behavior:'smooth', block:'start'});
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'inline-block';
+}
+
+document.getElementById('submitBtn').addEventListener('click', grade);
+document.getElementById('resetBtn').addEventListener('click', () => {
+  userAnswers = new Array(questions.length).fill(null);
+  document.getElementById('scoreBoard').classList.remove('show');
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('resetBtn').style.display = 'none';
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+render();
+</script>
+</body>
+</html>
