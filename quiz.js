@@ -1,201 +1,102 @@
-/* ==========================================================================
-   QUIZ HUB — JAVASCRIPT
-   Sections:
-     1. Mobile navigation toggle
-     2. Smooth scrolling for in-page links
-     3. Active navigation highlighting (scroll spy)
-     4. Sticky header shadow on scroll
-     5. FAQ accordion
-     6. Quiz category filter
-     7. Scroll-reveal animations
-     8. Back-to-top button
-     9. Footer year
-   All sections are self-contained — remove any block you don't need
-   without affecting the others.
-   ========================================================================== */
+/* =============================================================
+   QUIZ HUB — Behaviour
+   Vanilla JS, IIFE-wrapped, runs on DOMContentLoaded.
 
-document.addEventListener("DOMContentLoaded", () => {
+   Responsibilities:
+     1. Smooth scrolling for in-page anchors
+     2. Fade-in sections as they enter the viewport
+     3. Active / press feedback on Start Quiz buttons
+        (and a hook for wiring real quiz navigation)
+   ============================================================= */
 
-  /* -----------------------------------------------------------------------
-     1. MOBILE NAVIGATION TOGGLE
-     ----------------------------------------------------------------------- */
-  const navToggle = document.getElementById("navToggle");
-  const navMenu = document.getElementById("navMenu");
+(function () {
+    'use strict';
 
-  if (navToggle && navMenu) {
-    navToggle.addEventListener("click", () => {
-      const isOpen = navMenu.classList.toggle("is-open");
-      navToggle.classList.toggle("is-active", isOpen);
-      navToggle.setAttribute("aria-expanded", String(isOpen));
-    });
+    document.addEventListener('DOMContentLoaded', function () {
 
-    // Close the mobile menu whenever a nav link is clicked
-    navMenu.querySelectorAll("[data-nav-link]").forEach((link) => {
-      link.addEventListener("click", () => {
-        navMenu.classList.remove("is-open");
-        navToggle.classList.remove("is-active");
-        navToggle.setAttribute("aria-expanded", "false");
-      });
-    });
-  }
+        /* ---------- 1. SMOOTH SCROLL ----------
+           Intercepts clicks on <a href="#…"> and scrolls smoothly
+           to the target. Real links (e.g. "#0") are ignored. */
+        var anchorLinks = document.querySelectorAll('a[href^="#"]:not([href="#"])');
+        anchorLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                var targetId = this.getAttribute('href');
+                if (!targetId || targetId.length < 2) return;
 
-  /* -----------------------------------------------------------------------
-     2. SMOOTH SCROLLING FOR IN-PAGE LINKS
-     (CSS `scroll-behavior: smooth` already handles most of this; this JS
-     covers browsers/elements where extra control or offset is needed.)
-     ----------------------------------------------------------------------- */
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", (e) => {
-      const targetId = anchor.getAttribute("href");
-      if (targetId.length <= 1) return; // ignore bare "#" links
+                var targetEl = document.querySelector(targetId);
+                if (!targetEl) return;
 
-      const target = document.querySelector(targetId);
-      if (!target) return;
-
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
-
-  /* -----------------------------------------------------------------------
-     3. ACTIVE NAVIGATION HIGHLIGHTING (scroll spy)
-     ----------------------------------------------------------------------- */
-  const navLinks = document.querySelectorAll("[data-nav-link]");
-  const sections = Array.from(navLinks)
-    .map((link) => document.querySelector(link.getAttribute("href")))
-    .filter(Boolean);
-
-  if (sections.length) {
-    const spyObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const id = `#${entry.target.id}`;
-          navLinks.forEach((link) => {
-            link.classList.toggle("is-active", link.getAttribute("href") === id);
-          });
+                targetEl.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
         });
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-    );
 
-    sections.forEach((section) => spyObserver.observe(section));
-  }
 
-  /* -----------------------------------------------------------------------
-     4. STICKY HEADER SHADOW ON SCROLL
-     ----------------------------------------------------------------------- */
-  const siteHeader = document.getElementById("siteHeader");
+        /* ---------- 2. FADE-IN ON SCROLL ---------- */
+        var fadeTargets = document.querySelectorAll(
+            '.qh-header, .qh-quizzes, .qh-instructions'
+        );
 
-  function updateHeaderShadow() {
-    if (!siteHeader) return;
-    siteHeader.classList.toggle("is-scrolled", window.scrollY > 12);
-  }
-  updateHeaderShadow();
-  window.addEventListener("scroll", updateHeaderShadow, { passive: true });
+        if (fadeTargets.length) {
+            fadeTargets.forEach(function (el) {
+                el.classList.add('qh-fade');
+            });
 
-  /* -----------------------------------------------------------------------
-     5. FAQ ACCORDION
-     ----------------------------------------------------------------------- */
-  const accordionTriggers = document.querySelectorAll(".accordion__trigger");
+            // IntersectionObserver path (modern browsers)
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target); // animate only once
+                        }
+                    });
+                }, {
+                    threshold: 0.12,
+                    rootMargin: '0px 0px -40px 0px'
+                });
 
-  accordionTriggers.forEach((trigger) => {
-    const panel = trigger.nextElementSibling;
-    // Ensure closed panels start fully collapsed
-    panel.style.maxHeight = "0px";
+                fadeTargets.forEach(function (el) {
+                    observer.observe(el);
+                });
 
-    trigger.addEventListener("click", () => {
-      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+            // Fallback: just show everything
+            } else {
+                fadeTargets.forEach(function (el) {
+                    el.classList.add('is-visible');
+                });
+            }
+        }
 
-      // Close every other item first (single-open accordion behaviour)
-      accordionTriggers.forEach((otherTrigger) => {
-        if (otherTrigger === trigger) return;
-        otherTrigger.setAttribute("aria-expanded", "false");
-        otherTrigger.nextElementSibling.style.maxHeight = "0px";
-      });
 
-      // Toggle the clicked item
-      trigger.setAttribute("aria-expanded", String(!isOpen));
-      panel.style.maxHeight = isOpen ? "0px" : `${panel.scrollHeight}px`;
+        /* ---------- 3. START QUIZ BUTTONS ----------
+           Adds a subtle "press" effect, then runs whatever
+           navigation logic you want to plug in. */
+        var startButtons = document.querySelectorAll('.qh-btn-primary[data-quiz]');
+
+        startButtons.forEach(function (btn) {
+            btn.addEventListener('click', function (event) {
+                var quizId = this.getAttribute('data-quiz');
+
+                // --- Active-press feedback (subtle scale-down on tap/click)
+                this.style.transform = 'scale(0.97)';
+                var self = this;
+                setTimeout(function () { self.style.transform = ''; }, 140);
+
+                // --- Prevent jumping to top while href="#"
+                // ========================================================
+                // TODO: Replace the line below with your real navigation.
+                //   Examples:
+                //     window.location.href = '/quizzes/' + quizId;
+                //     window.location.href = '/quiz.html?id=' + encodeURIComponent(quizId);
+                //     openModalForQuiz(quizId);
+                // ========================================================
+                console.log('[Quiz Hub] Starting quiz:', quizId);
+            });
+        });
+
     });
-  });
 
-  /* -----------------------------------------------------------------------
-     6. QUIZ CATEGORY FILTER
-     ----------------------------------------------------------------------- */
-  const filterChips = document.querySelectorAll(".filter-chip");
-  const quizCards = document.querySelectorAll(".quiz-card:not(.quiz-card--template)");
-
-  filterChips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const filter = chip.dataset.filter;
-
-      // Update active chip state
-      filterChips.forEach((c) => {
-        c.classList.remove("is-active");
-        c.setAttribute("aria-selected", "false");
-      });
-      chip.classList.add("is-active");
-      chip.setAttribute("aria-selected", "true");
-
-      // Show/hide quiz cards based on category match
-      quizCards.forEach((card) => {
-        const matches = filter === "all" || card.dataset.category === filter;
-        card.style.display = matches ? "" : "none";
-      });
-    });
-  });
-
-  /* -----------------------------------------------------------------------
-     7. SCROLL-REVEAL ANIMATIONS
-     Adds [data-reveal] to key elements on load, then fades/slides them
-     in the first time they enter the viewport.
-     ----------------------------------------------------------------------- */
-  const revealSelectors = [
-    ".quiz-card",
-    ".instructions-list li",
-    ".accordion__item",
-    ".contact-card",
-  ];
-
-  const revealTargets = document.querySelectorAll(revealSelectors.join(","));
-  revealTargets.forEach((el) => el.setAttribute("data-reveal", ""));
-
-  const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry, index) => {
-        if (!entry.isIntersecting) return;
-        // Small stagger for elements revealing together
-        setTimeout(() => entry.target.classList.add("is-revealed"), index * 60);
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.12 }
-  );
-
-  revealTargets.forEach((el) => revealObserver.observe(el));
-
-  /* -----------------------------------------------------------------------
-     8. BACK-TO-TOP BUTTON
-     ----------------------------------------------------------------------- */
-  const backToTopBtn = document.getElementById("backToTop");
-
-  if (backToTopBtn) {
-    function toggleBackToTop() {
-      backToTopBtn.classList.toggle("is-visible", window.scrollY > 480);
-    }
-    toggleBackToTop();
-    window.addEventListener("scroll", toggleBackToTop, { passive: true });
-
-    backToTopBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
-
-  /* -----------------------------------------------------------------------
-     9. FOOTER YEAR
-     ----------------------------------------------------------------------- */
-  const yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-});
+})();

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Sustainable Computing & Ergonomics — Evaluation Quiz | adelgacode</title>
+<style>
+  :root{
+    --ink:#0f2a26;
+    --forest:#1f5c46;
+    --leaf:#3f8f5f;
+    --gold:#c99a2e;
+    --gold-soft:#f2e4bd;
+    --paper:#ffffff;
+    --mist:#f2f6f4;
+    --line:#dfe7e3;
+    --danger:#b3452f;
+    --danger-soft:#f7e4de;
+    --text:#132420;
+    --text-soft:#526059;
+    --radius:14px;
+    --shadow: 0 10px 30px -12px rgba(15,42,38,0.25);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background:var(--mist);
+    color:var(--text);
+    min-height:100vh;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:0 0 40px;
+    min-height:100vh;
+    background:var(--paper);
+    box-shadow: var(--shadow);
+  }
+  header.top{
+    background: linear-gradient(135deg, var(--ink) 0%, var(--forest) 100%);
+    color:#eef7f1;
+    padding:22px 20px 20px;
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:10px;
+  }
+  .brand b{color:var(--gold);}
+  h1.title{
+    font-size:20px;
+    margin:0 0 4px;
+    font-weight:700;
+    line-height:1.3;
+  }
+  .subtitle{
+    font-size:13px;
+    opacity:.8;
+    margin:0;
+  }
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:16px;
+  }
+  .progress-track{
+    flex:1;
+    height:7px;
+    background:rgba(255,255,255,0.18);
+    border-radius:99px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--gold);
+    border-radius:99px;
+    transition:width .3s ease;
+    width:0%;
+  }
+  .progress-label{
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+    color:var(--gold-soft);
+  }
+
+  main{padding:22px 20px 10px;}
+
+  /* Start screen */
+  .start-screen{padding:6px 0 20px;}
+  .start-card{
+    background: var(--mist);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:16px;
+  }
+  .start-card h2{margin:0 0 10px;font-size:15px;color:var(--forest);}
+  .start-card ul{margin:0;padding-left:18px;color:var(--text-soft);font-size:14px;line-height:1.7;}
+  .cat-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:99px;
+    padding:6px 12px;
+    font-size:12.5px;
+    margin:4px 6px 0 0;
+    color:var(--forest);
+    font-weight:600;
+  }
+  .cat-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+  .btn-primary{
+    display:block;
+    width:100%;
+    background:var(--forest);
+    color:#fff;
+    border:none;
+    padding:15px 18px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.02em;
+    cursor:pointer;
+    box-shadow: 0 8px 20px -8px rgba(31,92,70,0.55);
+  }
+  .btn-primary:active{transform:scale(.98);}
+  .btn-secondary{
+    display:block;
+    width:100%;
+    background:#fff;
+    color:var(--forest);
+    border:2px solid var(--forest);
+    padding:13px 18px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:10px;
+  }
+
+  /* Question screen */
+  .q-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .q-tag{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--forest);
+    background:#e7f2ec;
+    padding:5px 10px;
+    border-radius:99px;
+  }
+  .q-number{
+    font-size:12px;
+    color:var(--text-soft);
+    font-weight:600;
+  }
+  .q-text{
+    font-size:18px;
+    font-weight:700;
+    line-height:1.45;
+    margin:6px 0 18px;
+    color:var(--ink);
+  }
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    text-align:left;
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    padding:13px 14px;
+    font-size:15px;
+    line-height:1.4;
+    cursor:pointer;
+    transition: border-color .15s ease, background .15s ease;
+    color:var(--text);
+  }
+  .option:active{background:var(--mist);}
+  .option .letter{
+    flex:0 0 26px;
+    height:26px;
+    border-radius:50%;
+    background:var(--mist);
+    border:1.5px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    color:var(--text-soft);
+  }
+  .option.correct{
+    border-color:var(--leaf);
+    background:#eaf7ef;
+  }
+  .option.correct .letter{background:var(--leaf);border-color:var(--leaf);color:#fff;}
+  .option.wrong{
+    border-color:var(--danger);
+    background:var(--danger-soft);
+  }
+  .option.wrong .letter{background:var(--danger);border-color:var(--danger);color:#fff;}
+  .option.disabled{cursor:default;}
+  .option.dim{opacity:.55;}
+
+  .feedback{
+    margin-top:16px;
+    padding:14px;
+    border-radius:12px;
+    font-size:14px;
+    line-height:1.55;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct-box{background:#eaf7ef;border:1px solid var(--leaf);color:#1c4a30;}
+  .feedback.wrong-box{background:var(--danger-soft);border:1px solid var(--danger);color:#6e2c1c;}
+  .feedback b{display:block;margin-bottom:4px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;}
+
+  .nav-row{margin-top:18px;}
+
+  /* Results screen */
+  .results{padding:10px 0 24px;text-align:center;}
+  .score-ring{
+    width:160px;height:160px;
+    margin:10px auto 18px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: conic-gradient(var(--forest) calc(var(--pct) * 1%), var(--line) 0);
+  }
+  .score-ring-inner{
+    width:128px;height:128px;
+    border-radius:50%;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+  .score-num{font-size:34px;font-weight:800;color:var(--ink);}
+  .score-den{font-size:13px;color:var(--text-soft);}
+  .grade-label{
+    display:inline-block;
+    background:var(--gold-soft);
+    color:#7a5a12;
+    font-weight:700;
+    font-size:13px;
+    padding:6px 14px;
+    border-radius:99px;
+    margin-bottom:18px;
+  }
+  .breakdown{
+    text-align:left;
+    background:var(--mist);
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    padding:16px;
+    margin-bottom:16px;
+  }
+  .breakdown h3{margin:0 0 12px;font-size:14px;color:var(--forest);}
+  .bd-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:13px;
+  }
+  .bd-name{flex:0 0 40%;color:var(--text-soft);font-weight:600;}
+  .bd-bar-track{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .bd-bar-fill{height:100%;background:var(--forest);border-radius:99px;}
+  .bd-frac{flex:0 0 44px;text-align:right;font-weight:700;color:var(--ink);}
+
+  .review-item{
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:10px;
+    font-size:13.5px;
+  }
+  .review-item.miss{border-color:var(--danger);background:var(--danger-soft);}
+  .review-item.hit{border-color:var(--leaf);background:#f2fbf5;}
+  .review-q{font-weight:700;margin-bottom:6px;color:var(--ink);}
+  .review-a{color:var(--text-soft);}
+  .review-toggle{
+    background:none;border:none;color:var(--forest);font-weight:700;font-size:14px;
+    cursor:pointer;padding:6px 0;margin-bottom:10px;text-decoration:underline;
+  }
+  #reviewList{display:none;}
+
+  footer.brand-footer{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--text-soft);
+    padding:18px 20px 4px;
+    letter-spacing:.03em;
+  }
+  footer.brand-footer b{color:var(--forest);}
+
+  @media (max-width:400px){
+    .q-text{font-size:16.5px;}
+    .score-ring{width:140px;height:140px;}
+    .score-ring-inner{width:112px;height:112px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span>adelgacode <b>·</b> Professional Quiz bank</span>
+      <span id="headerProgressLabel"></span>
+    </div>
+    <h1 class="title" id="headerTitle">Sustainable Computing &amp; Ergonomics</h1>
+    <p class="subtitle" id="headerSubtitle">Evaluation quiz · Green IT · Ghana IT Sector · Ergonomic Devices</p>
+    <div class="progress-row" id="progressRow" style="display:none;">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 50</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- START SCREEN -->
+    <section id="startScreen" class="start-screen">
+      <div class="start-card">
+        <h2>What this covers</h2>
+        <ul>
+          <li>Sustainable Computing &amp; Ergonomics — Ghana's Digital Economy</li>
+          <li>Green IT &amp; Sustainable Computing — certifications, embodied energy, green coding</li>
+          <li>Introduction to Ergonomics &amp; Health Hazards — IEA framework, Ghanaian OSH law</li>
+          <li>Ergonomic Devices — classroom &amp; lab workstation design</li>
+        </ul>
+        <div style="margin-top:12px;">
+          <span class="cat-pill"><span class="cat-dot" style="background:#1f5c46"></span>Sustainable Computing (Ghana)</span>
+          <span class="cat-pill"><span class="cat-dot" style="background:#3f8f5f"></span>Green IT</span>
+          <span class="cat-pill"><span class="cat-dot" style="background:#c99a2e"></span>Ergonomics &amp; Health Hazards</span>
+          <span class="cat-pill"><span class="cat-dot" style="background:#b3452f"></span>Ergonomic Devices</span>
+        </div>
+      </div>
+      <div class="start-card">
+        <h2>How it works</h2>
+        <ul>
+          <li>50 multiple-choice questions, one at a time</li>
+          <li>Instant feedback with a short explanation after each answer</li>
+          <li>A full score breakdown by topic at the end</li>
+          <li>Works fine on your phone — no login needed</li>
+        </ul>
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">Start the Quiz</button>
+    </section>
+
+    <!-- QUIZ SCREEN -->
+    <section id="quizScreen" style="display:none;">
+      <div class="q-meta">
+        <span class="q-tag" id="qTag">Category</span>
+        <span class="q-number" id="qNumber">Question 1 of 50</span>
+      </div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsList"></div>
+      <div class="feedback" id="feedbackBox">
+        <b id="feedbackHeader"></b>
+        <span id="feedbackText"></span>
+      </div>
+      <div class="nav-row">
+        <button class="btn-primary" id="nextBtn" style="display:none;" onclick="nextQuestion()">Next Question</button>
+      </div>
+    </section>
+
+    <!-- RESULTS SCREEN -->
+    <section id="resultsScreen" style="display:none;">
+      <div class="results">
+        <div class="score-ring" id="scoreRing">
+          <div class="score-ring-inner">
+            <div class="score-num" id="scoreNum">0</div>
+            <div class="score-den">out of 50</div>
+          </div>
+        </div>
+        <div class="grade-label" id="gradeLabel"></div>
+      </div>
+      <div class="breakdown">
+        <h3>Score by topic</h3>
+        <div id="breakdownList"></div>
+      </div>
+      <button class="review-toggle" onclick="toggleReview()">Show full answer review ▾</button>
+      <div id="reviewList"></div>
+      <button class="btn-primary" onclick="restartQuiz()">Retake the Quiz</button>
+    </section>
+  </main>
+
+  <footer class="brand-footer">
+    Built for personal exam prep · <b>adelgacode</b>
+  </footer>
+</div>
+
+<script>
+const CATEGORIES = {
+  SC: { name: "Sustainable Computing (Ghana)", color: "#1f5c46" },
+  GIT: { name: "Green IT", color: "#3f8f5f" },
+  ERG: { name: "Ergonomics & Health Hazards", color: "#c99a2e" },
+  DEV: { name: "Ergonomic Devices", color: "#b3452f" }
+};
+
+const QUESTIONS = [
+// ===== SUSTAINABLE COMPUTING & ERGONOMICS (Ghana deck) — 13 =====
+{cat:"SC", q:"According to the presentation, what is the primary goal of sustainable computing?", options:["Maximizing device processing speed regardless of cost","Reducing carbon footprint, energy consumption, and toxic waste while maintaining or improving performance","Replacing all human labor with automated systems","Increasing the number of devices manufactured annually"], correct:1, explain:"Sustainable computing aims to reduce carbon footprint, energy consumption, and toxic waste while maintaining or improving system performance and accessibility."},
+{cat:"SC", q:"Which four stages make up the IT lifecycle approach described for sustainable computing?", options:["Purchase, Ship, Store, Discard","Design, Manufacture, Operational Use, End-of-Life","Plan, Build, Test, Deploy","Extract, Refine, Sell, Recycle"], correct:1, explain:"The IT lifecycle approach covers Design, Manufacture, Operational Use, and End-of-Life."},
+{cat:"SC", q:"The Three Pillars of Sustainable Computing are:", options:["Hardware, Software, Networking","Environmental, Economic, Social","Design, Deployment, Disposal","Speed, Cost, Reliability"], correct:1, explain:"Sustainable computing rests on Environmental, Economic, and Social pillars, which must be balanced together."},
+{cat:"SC", q:"Roughly what share of global electricity use do data centers account for, per the presentation?", options:["~1-2%","~15-20%","~40%","~0.01%"], correct:0, explain:"Data centers account for approximately 1-2% of global electricity use."},
+{cat:"SC", q:"By how much could Ghana's IT sector reduce operational costs through energy optimization, according to the deck?", options:["1-5%","20-30%","70-80%","Costs cannot be reduced"], correct:1, explain:"Ghana's IT sector can reduce operational costs by 20-30% through energy optimization."},
+{cat:"SC", q:"Agbogbloshie is referenced in the presentation as an example of:", options:["A formal, government-run recycling facility","A hub of informal e-waste processing with severe health/environmental hazards","Ghana's main renewable energy plant","A university ICT research center"], correct:1, explain:"Agbogbloshie is cited as a hub for informal e-waste processing, highlighting extreme ergonomic and toxicological hazards for informal workers."},
+{cat:"SC", q:"What does the ISO 14001 standard, mentioned among international standards, primarily address?", options:["Labor union agreements","Environmental Management System (EMS) requirements","Software licensing compliance","Data privacy regulations"], correct:1, explain:"ISO 14001 sets Environmental Management System (EMS) requirements to improve environmental performance."},
+{cat:"SC", q:"What does Ghana's Act 917 (2016) establish?", options:["A national minimum wage for IT workers","E-waste control and an eco-levy","Import tariffs on all electronics","A telecom licensing framework"], correct:1, explain:"Act 917 (2016) establishes e-waste control measures and an eco-levy in Ghana."},
+{cat:"SC", q:"Which of these is NOT one of the three domains of ergonomics described in the presentation?", options:["Physical","Cognitive","Organizational","Financial"], correct:3, explain:"The three domains are Physical, Cognitive, and Organizational ergonomics — 'Financial' is not one of them."},
+{cat:"SC", q:"Cognitive ergonomics, as described in the deck, primarily focuses on:", options:["Repetitive strain injuries in the wrist","Mental processes like perception, memory, reasoning, and motor response in human-system interaction","Corporate financial reporting","Building design and architecture"], correct:1, explain:"Cognitive ergonomics focuses on mental processes—perception, memory, reasoning, motor response—as they affect interactions with systems."},
+{cat:"SC", q:"A challenge specific to Ghana's IT sector mentioned in the presentation is 'brain drain,' referring to:", options:["Excessive use of AI reducing human cognition","Skilled IT professionals leaving for better conditions abroad","A shortage of computer science textbooks","Overheating of data center hardware"], correct:1, explain:"Brain drain refers to skilled IT professionals seeking better working conditions and opportunities abroad, driven partly by inadequate support and well-being."},
+{cat:"SC", q:"According to the 'Shared Foundational Principles' slide, what is the intersection point between sustainable computing and ergonomics called?", options:["Systemic Approach","Digital Transformation","Circular Economy","Talent Pipeline"], correct:0, explain:"The 'Systemic Approach' is the intersection point — viewing the workplace as an interconnected sociotechnical system."},
+{cat:"SC", q:"In the Human-Technology-Environment Nexus model, what role does 'Technology' play?", options:["It is irrelevant to sustainability outcomes","It acts as the mediator between human well-being and environmental impact","It exists independently of human or environmental factors","It only affects economic outcomes, not health"], correct:1, explain:"Technology acts as the mediator: efficient, well-designed IT infrastructure reduces both environmental impact and human strain."},
+
+// ===== GREEN IT & SUSTAINABLE COMPUTING deck — 13 =====
+{cat:"GIT", q:"What share of global greenhouse gas emissions does the ICT sector account for, per the presentation?", options:["0.1-0.5%","1.8-3.9%","10-15%","25-30%"], correct:1, explain:"The ICT sector is responsible for between 1.8% and 3.9% of global greenhouse gas emissions."},
+{cat:"GIT", q:"How has data center energy consumption changed over the past decade, according to the deck?", options:["It has halved","It has stayed flat","It has doubled","It has increased tenfold"], correct:2, explain:"Data centers have doubled their energy consumption over the past decade."},
+{cat:"GIT", q:"Green IT strategy, as outlined in the deck, is broken into which three dimensions?", options:["Hardware, Software, Operational","Sales, Marketing, Support","Design, Testing, Release","Local, National, Global"], correct:0, explain:"Green IT is broken into Hardware Strategy, Software Strategy, and Operational Strategy."},
+{cat:"GIT", q:"EPEAT's rating system uses which tiers?", options:["Basic, Standard, Premium","Bronze, Silver, Gold","Level 1, Level 2, Level 3","Pass, Merit, Distinction"], correct:1, explain:"EPEAT offers Bronze, Silver, and Gold tiers based on the number of optional criteria a product meets."},
+{cat:"GIT", q:"What distinguishes TCO Certified from EPEAT, per the comparison slide?", options:["TCO Certified has no environmental criteria at all","TCO Certified mandates compliance with all criteria for every certified product, rather than offering optional tiers","TCO Certified only applies to mobile phones","TCO Certified was discontinued in 2020"], correct:1, explain:"TCO Certified mandates compliance with all criteria for all products, establishing a strict, consistent baseline, unlike EPEAT's tiered/optional approach."},
+{cat:"GIT", q:"What is 'embodied energy' as defined in the presentation?", options:["The energy a device uses only while powered on","The total energy consumed in manufacturing a device, including raw material extraction, fabrication, assembly, and transport","The energy stored in a laptop's battery","The energy required to recycle a device at end-of-life"], correct:1, explain:"Embodied energy is the total energy consumed in manufacturing a device — from raw material extraction through assembly and transportation."},
+{cat:"GIT", q:"Approximately how much CO₂ is generated manufacturing a single new laptop, per the deck?", options:["33 kg","331 kg","3,310 kg","3.3 kg"], correct:1, explain:"Manufacturing a single new laptop generates approximately 331 kg of CO₂ emissions."},
+{cat:"GIT", q:"By what percentage do thin clients reduce endpoint power consumption compared to typical desktops?", options:["10-20%","40-50%","80-90%","99%"], correct:2, explain:"Thin clients operate at 5-15 watts versus 50-100 watts for desktops — an 80-90% reduction in endpoint power consumption."},
+{cat:"GIT", q:"For an organization of 500 office users, switching to thin clients is estimated to save approximately how much energy annually?", options:["9,150 kWh","91,520 kWh","915,200 kWh","1,520 kWh"], correct:1, explain:"The deck estimates approximately 91,520 kWh saved annually for 500 users switching to thin clients, worth about $12,950."},
+{cat:"GIT", q:"Refurbished computers, compared to manufacturing new ones, are said to reduce CO₂ emissions, water usage, and energy consumption by roughly:", options:["80%, 95%, 90% respectively","10%, 15%, 20% respectively","50%, 50%, 50% respectively","99%, 99%, 99% respectively"], correct:0, explain:"Refurbished computers reduce CO₂ emissions by about 80%, water usage by 95%, and energy consumption by 90% compared to new devices."},
+{cat:"GIT", q:"'Lean coding' principles, as described in the software efficiency section, emphasize:", options:["Adding as many features as possible for user flexibility","Using the minimal amount of processing necessary to deliver required functionality","Writing code exclusively in assembly language","Avoiding all use of cloud infrastructure"], correct:1, explain:"Lean coding emphasizes minimal necessary processing — reducing file sizes, eliminating unneeded features, and removing code bloat."},
+{cat:"GIT", q:"How much can intelligent OS-level power management (frequency scaling, sleep states, device management) reduce energy consumption, per the presentation?", options:["1-5%","20-40%","60-80%","90-100%"], correct:1, explain:"OS power management capabilities can reduce energy consumption by 20-40% through intelligent processor frequency scaling and related features."},
+{cat:"GIT", q:"Which CPU governor is described as ideal for idle and low-load conditions?", options:["Performance","Powersave","Balanced Max","Turbo"], correct:1, explain:"The 'powersave' governor is ideal for idle and low-load conditions, while 'performance' handles demanding workloads."},
+
+// ===== ERGONOMICS & HEALTH HAZARDS (week 5) — 12 =====
+{cat:"ERG", q:"According to the International Ergonomics Association (IEA), ergonomics is the scientific discipline concerned with:", options:["Designing furniture for aesthetic appeal only","Understanding interactions among humans and other elements of a system to optimize well-being and system performance","Studying computer hardware architecture","Regulating internet bandwidth usage"], correct:1, explain:"The IEA defines ergonomics as concerned with interactions among humans and system elements, applying theory and methods to optimize human well-being and overall system performance."},
+{cat:"ERG", q:"The word 'ergonomics' derives from the Greek words 'ergon' and 'nomos,' meaning:", options:["'Body' and 'balance'","'Work' and 'laws'","'Machine' and 'mind'","'Comfort' and 'design'"], correct:1, explain:"'Ergon' means work and 'nomos' means laws — ergonomics literally translates to 'the science or laws of work.'"},
+{cat:"ERG", q:"The core philosophy of ergonomics, as presented, shifts the focus from:", options:["Forcing workers to adapt, to designing tasks that fit human limits","Designing tasks for machines, to designing tasks for AI","Individual performance, to purely group performance","Physical health, to purely financial metrics"], correct:0, explain:"Ergonomics shifts the focus from forcing workers to adapt, to designing tasks and tools that fit human limits — 'fitting the job to the person.'"},
+{cat:"ERG", q:"Human-Computer Interaction (HCI), as a cognitive ergonomics sub-discipline, primarily targets:", options:["The physical wear on keyboards and mice","The 'cognitive friction' between the human mind and the digital interface","The manufacturing cost of computer chips","Internet service provider pricing"], correct:1, explain:"While physical ergonomics optimizes keyboard/mouse/chair, HCI targets the cognitive friction between the human mind and the digital interface."},
+{cat:"ERG", q:"Which of the following is listed as one of the multi-dimensional benefits of ergonomics?", options:["Increased manufacturing defects","Reduced Return on Investment","Drastic reduction in work-related musculoskeletal disorders (MSDs)","Elimination of the need for training"], correct:2, explain:"A key benefit is the drastic reduction in incidence and severity of work-related musculoskeletal disorders."},
+{cat:"ERG", q:"Ghana's Labour Act, 2003 (Act 651), Section 118 establishes:", options:["A duty of care compelling employers to provide a safe working environment and proper equipment","A ban on all electronics imports","Free university tuition for IT students","Mandatory four-day work weeks"], correct:0, explain:"Section 118 compels employers to provide and maintain a safe working environment, safe systems of work, and proper equipment."},
+{cat:"ERG", q:"The Factories, Offices and Shops Act, 1970 (Act 328) mandates basic environmental standards including:", options:["Adequate ventilation, lighting, cleanliness, and prevention of overcrowding","Mandatory remote work policies","Free software licensing for all employees","Minimum wage increases tied to inflation"], correct:0, explain:"Act 328 mandates basic environmental parameters: ventilation, lighting, cleanliness, and prevention of overcrowding."},
+{cat:"ERG", q:"The Workmen's Compensation Act, 1987 (PNDC Law 187) establishes what kind of compensation system?", options:["A fault-based system requiring proof of employer negligence","A no-fault compensation system for work-related injuries or occupational diseases","A voluntary donation-based relief fund","A system limited only to office workers"], correct:1, explain:"It establishes a no-fault compensation system: employers are liable regardless of negligence if the injury or disease is work-related."},
+{cat:"ERG", q:"The Minerals & Mining Act, 2006 (Act 703) is relevant to ergonomics primarily because it:", options:["Regulates vibration and noise exposure and enforces safety standards in the extractive sector","Sets ergonomic standards for university computer labs","Bans the use of computers in mining operations","Focuses exclusively on financial auditing of mining firms"], correct:0, explain:"It enforces strict technical, health, and safety standards in mining, including regulating vibration and noise, which are physical risk factors for spinal and cognitive disorders."},
+{cat:"ERG", q:"Work-related Musculoskeletal Disorders (MSDs), as described in the four-stage model, develop through:", options:["A single acute traumatic event only","Biomechanical stress → Micro-trauma → Inflammation → Chronic MSD","Random onset with no identifiable cause","Immediate onset the first time a task is performed"], correct:1, explain:"MSDs develop progressively through four stages: Biomechanical Stress, Micro-Trauma, Inflammation, and Chronic MSD — from repeated micro-trauma, not a single event."},
+{cat:"ERG", q:"Which of these is classified as an organizational/psychosocial risk factor for MSDs, rather than a biomechanical one?", options:["Forceful exertions like heavy lifting","Awkward postures such as bending or twisting","Low autonomy — minimal control over task pacing or methods","Repetitive movements without rest"], correct:2, explain:"Low autonomy (minimal control over task execution or pacing) is an organizational/psychosocial risk factor, distinct from biomechanical/physical risks like forceful exertion or awkward posture."},
+{cat:"ERG", q:"Which international body is cited for guidelines on 'fitting the job to the person' to reduce work-related MSDs?", options:["World Trade Organization (WTO)","Occupational Safety and Health Administration (OSHA)","International Monetary Fund (IMF)","World Intellectual Property Organization (WIPO)"], correct:1, explain:"OSHA is cited for guidelines on fitting the job to the person and reducing work-related MSDs."},
+
+// ===== ERGONOMIC DEVICES: CLASSROOM & LAB WORKSTATION DESIGN (week 6) — 12 =====
+{cat:"DEV", q:"According to OSHA figures cited in the presentation, the estimated direct and indirect cost per person for carpal tunnel syndrome is approximately:", options:["€500","€5,077","€50,774","€507,740"], correct:2, explain:"The presentation cites an estimated cost of €50,774 per person for carpal tunnel syndrome, framing preventive ergonomic devices as a fraction of that cost."},
+{cat:"DEV", q:"A 'neutral posture,' as defined using the UCSF Ergonomics Guidelines, is best described as:", options:["A position requiring maximum muscular effort to hold correctly","A position of ease the body can maintain for prolonged periods with minimal muscular effort","Any posture as long as the feet touch the floor","A posture only achievable while standing"], correct:1, explain:"Neutral posture is 'a position of ease for the body to sustain with minimal effort,' giving biomechanical advantages and reducing musculoskeletal stress."},
+{cat:"DEV", q:"For neutral posture at a workstation, the recommended elbow angle is:", options:["45° or less","Exactly 60°","100° or more, with wrists straight and neutral","180°, fully extended"], correct:2, explain:"Elbows should be bent at 100° or more, with wrists kept straight and neutral."},
+{cat:"DEV", q:"For classroom furniture, height-adjustable desks are typically recommended to have an adjustment range of:", options:["10-15 inches","22-30 inches","40-50 inches","60-70 inches"], correct:1, explain:"Height-adjustable desks should have an adjustment range of 22-30 inches to support different age groups and body sizes."},
+{cat:"DEV", q:"For computer lab layout, the recommended workstation spacing between stations is:", options:["Minimum 1-2 feet","Minimum 4-6 feet","Minimum 10-12 feet","No specific spacing is needed"], correct:1, explain:"A minimum of 4-6 feet between stations allows comfortable movement, adjustment, and instructor access."},
+{cat:"DEV", q:"Recommended monitor positioning in a computer lab places the screen:", options:["20-26 inches away, top of screen at or slightly below eye level","5-10 inches away, centered at chin level","Over 40 inches away, positioned above eye level","Directly on the desk surface, angled upward"], correct:0, explain:"Monitors should be 20-26 inches away (about arm's length), with the top of the screen at or slightly below eye level to prevent neck tilt."},
+{cat:"DEV", q:"A key insight about ergonomic chair selection is that chairs should support:", options:["Static posture only, to keep the body still","Dynamic sitting, with backrests that recline and track body movement","No adjustability, to reduce manufacturing cost","Only children's body sizes"], correct:1, explain:"Chairs must support dynamic sitting rather than static posture — backrests that recline and track movement help maintain spinal health and reduce fatigue."},
+{cat:"DEV", q:"On a desk, the 'Green Zone' reach area is meant for items that are:", options:["Rarely used, like binders and printers","Constantly used, like the keyboard and mouse, positioned within easy reach","Only decorative and never touched","Located far away, requiring the user to stand"], correct:1, explain:"The Green Zone holds constantly used items like the keyboard and mouse, positioned within easy reach without extending the arms."},
+{cat:"DEV", q:"Which ergonomic accessory is described as helping to prevent 'tech neck' by elevating the screen to eye level?", options:["Adjustable footrests","Monitor arms and risers","Vertical ergonomic mice","Adjustable keyboard trays"], correct:1, explain:"Monitor arms and risers elevate screens to eye level, preventing 'tech neck' and forward head tilt."},
+{cat:"DEV", q:"In the cost-benefit / ROI analysis for a 100-workstation ergonomic lab model, what was the estimated first-year ROI?", options:["2% ROI","18% ROI","75% ROI","150% ROI"], correct:1, explain:"The 100-workstation lab model projected an 18% ROI in the first year, with a 10-month payback period, against a $127,000 initial investment."},
+{cat:"DEV", q:"Industry benchmarks cited in the deck suggest that for every $1 invested in ergonomics, organizations see a return of:", options:["$0.10 to $0.50","$1 to $2","$3 to $6","$20 to $30"], correct:2, explain:"Industry benchmarks show a $3 to $6 return for every dollar invested in ergonomics."},
+{cat:"DEV", q:"In the four-phase rollout strategy for ergonomic implementation, which phase comes immediately after 'Installation & Setup'?", options:["Pre-Planning & Needs Assessment","User Training & Education","Maintenance & Support","Vendor Contract Negotiation"], correct:1, explain:"The four phases are: 1) Pre-Planning & Needs, 2) Installation & Setup, 3) User Training & Education, 4) Maintenance & Support."}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+let userAnswers = []; // {selected, correct}
+
+function shuffleArray(){ /* keep fixed order intentionally for consistent evaluation */ }
+
+function startQuiz(){
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('progressRow').style.display = 'flex';
+  document.getElementById('headerSubtitle').textContent = 'Question ' + 1 + ' of ' + QUESTIONS.length;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const q = QUESTIONS[current];
+  const cat = CATEGORIES[q.cat];
+  document.getElementById('qTag').textContent = cat.name;
+  document.getElementById('qTag').style.background = hexToSoft(cat.color);
+  document.getElementById('qTag').style.color = cat.color;
+  document.getElementById('qNumber').textContent = 'Question ' + (current+1) + ' of ' + QUESTIONS.length;
+  document.getElementById('qText').textContent = q.q;
+
+  const pct = Math.round((current / QUESTIONS.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = current + ' / ' + QUESTIONS.length;
+  document.getElementById('headerSubtitle').textContent = 'Question ' + (current+1) + ' of ' + QUESTIONS.length;
+
+  const list = document.getElementById('optionsList');
+  list.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = '<span class="letter">' + letters[idx] + '</span><span>' + opt + '</span>';
+    div.onclick = () => selectAnswer(idx, div);
+    list.appendChild(div);
+  });
+
+  document.getElementById('feedbackBox').className = 'feedback';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function hexToSoft(hex){
+  return hex + '20';
+}
+
+function selectAnswer(idx, el){
+  if(answered) return;
+  answered = true;
+  const q = QUESTIONS[current];
+  const options = document.querySelectorAll('#optionsList .option');
+  const isCorrect = idx === q.correct;
+
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if(i === q.correct){
+      opt.classList.add('correct');
+    } else if(i === idx && !isCorrect){
+      opt.classList.add('wrong');
+    } else {
+      opt.classList.add('dim');
+    }
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.classList.add('show');
+  if(isCorrect){
+    score++;
+    fb.classList.add('correct-box');
+    fb.classList.remove('wrong-box');
+    document.getElementById('feedbackHeader').textContent = 'Correct';
+  } else {
+    fb.classList.add('wrong-box');
+    fb.classList.remove('correct-box');
+    document.getElementById('feedbackHeader').textContent = 'Not quite';
+  }
+  document.getElementById('feedbackText').textContent = q.explain;
+
+  userAnswers.push({cat:q.cat, correct:isCorrect, q:q.q, chosen:q.options[idx], right:q.options[q.correct]});
+
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent = (current === QUESTIONS.length - 1) ? 'See Results' : 'Next Question';
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= QUESTIONS.length){
+    showResults();
+  } else {
+    renderQuestion();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function showResults(){
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('progressRow').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+  document.getElementById('headerSubtitle').textContent = 'Results';
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  document.getElementById('scoreRing').style.setProperty('--pct', pct);
+  document.getElementById('scoreNum').textContent = score;
+
+  let grade = 'Keep reviewing';
+  if(pct >= 90) grade = 'Excellent — exam ready';
+  else if(pct >= 75) grade = 'Strong grasp';
+  else if(pct >= 60) grade = 'Good, some gaps to close';
+  else grade = 'Needs more review';
+  document.getElementById('gradeLabel').textContent = pct + '% · ' + grade;
+
+  // Breakdown by category
+  const bd = {};
+  Object.keys(CATEGORIES).forEach(k => bd[k] = {total:0, correct:0});
+  QUESTIONS.forEach((q, i) => {
+    bd[q.cat].total++;
+  });
+  userAnswers.forEach(a => {
+    if(a.correct) bd[a.cat].correct++;
+  });
+
+  const bdList = document.getElementById('breakdownList');
+  bdList.innerHTML = '';
+  Object.keys(CATEGORIES).forEach(k => {
+    const c = CATEGORIES[k];
+    const stats = bd[k];
+    const p = stats.total ? Math.round((stats.correct/stats.total)*100) : 0;
+    const row = document.createElement('div');
+    row.className = 'bd-row';
+    row.innerHTML = '<span class="bd-name">'+c.name+'</span>' +
+      '<span class="bd-bar-track"><span class="bd-bar-fill" style="width:'+p+'%;background:'+c.color+'"></span></span>' +
+      '<span class="bd-frac">'+stats.correct+'/'+stats.total+'</span>';
+    bdList.appendChild(row);
+  });
+
+  // Review list
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+  userAnswers.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item ' + (a.correct ? 'hit' : 'miss');
+    div.innerHTML = '<div class="review-q">'+(i+1)+'. '+a.q+'</div>' +
+      '<div class="review-a">Your answer: '+a.chosen+(a.correct ? '' : '<br>Correct answer: '+a.right)+'</div>';
+    reviewList.appendChild(div);
+  });
+}
+
+function toggleReview(){
+  const el = document.getElementById('reviewList');
+  const btn = event.target;
+  if(el.style.display === 'none' || !el.style.display){
+    el.style.display = 'block';
+    btn.textContent = 'Hide full answer review ▴';
+  } else {
+    el.style.display = 'none';
+    btn.textContent = 'Show full answer review ▾';
+  }
+}
+
+function restartQuiz(){
+  current = 0;
+  score = 0;
+  userAnswers = [];
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'block';
+  document.getElementById('headerSubtitle').textContent = 'Evaluation quiz · Green IT · Ghana IT Sector · Ergonomic Devices';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

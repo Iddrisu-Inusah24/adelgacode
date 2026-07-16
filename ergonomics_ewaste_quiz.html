@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>adelgacode | Ergonomics & Green Computing Quiz</title>
+<style>
+  :root{
+    --navy:#0d1b2a;
+    --navy2:#1b2a41;
+    --teal:#0f8b8d;
+    --teal-light:#3fc1c0;
+    --gold:#d4a537;
+    --danger:#c1443c;
+    --success:#1e8e5a;
+    --bg:#eef2f5;
+    --card:#ffffff;
+    --text:#1b2430;
+    --muted:#6b7785;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 45%,var(--bg) 45%);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px 60px;}
+
+  /* ---------- Header / brand ---------- */
+  .brand{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 4px 20px;
+  }
+  .brand-mark{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,var(--teal),var(--navy));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:18px;letter-spacing:0.5px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
+    flex-shrink:0;
+  }
+  .brand-text .name{color:#fff;font-weight:700;font-size:15px;letter-spacing:0.5px;}
+  .brand-text .tag{color:#a9c4d0;font-size:12px;}
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--card);
+    border-radius:18px;
+    padding:26px 22px;
+    box-shadow:0 10px 30px rgba(13,27,42,0.15);
+  }
+
+  h1{font-size:22px;margin:0 0 6px;color:var(--navy);}
+  h2{font-size:17px;margin:0 0 14px;color:var(--navy);}
+  p.lead{color:var(--muted);font-size:14.5px;line-height:1.5;margin:0 0 20px;}
+
+  /* Gate screen */
+  .gate-icon{
+    width:56px;height:56px;border-radius:50%;
+    background:rgba(15,139,141,0.12);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;margin-bottom:16px;
+  }
+  input[type=password], input[type=text]{
+    width:100%;padding:14px 16px;border-radius:12px;
+    border:1.5px solid #d8dee3;font-size:16px;
+    outline:none;transition:border-color .15s;
+  }
+  input[type=password]:focus, input[type=text]:focus{border-color:var(--teal);}
+  .error-msg{color:var(--danger);font-size:13.5px;margin-top:8px;min-height:18px;}
+
+  button{
+    font-family:inherit;cursor:pointer;border:none;
+  }
+  .btn-primary{
+    width:100%;margin-top:16px;padding:15px;border-radius:12px;
+    background:var(--teal);color:#fff;font-size:16px;font-weight:600;
+    box-shadow:0 6px 16px rgba(15,139,141,0.3);
+  }
+  .btn-primary:active{transform:scale(0.98);}
+  .btn-primary:disabled{opacity:0.5;}
+  .btn-secondary{
+    width:100%;margin-top:10px;padding:13px;border-radius:12px;
+    background:#f0f3f5;color:var(--navy);font-size:15px;font-weight:600;
+  }
+
+  /* Module select */
+  .module-list{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .module-card{
+    border:1.5px solid #e3e8eb;border-radius:14px;padding:16px 16px;
+    display:flex;align-items:center;gap:14px;cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .module-card:active{background:#f5f8f9;}
+  .module-card.selected{border-color:var(--teal);background:rgba(15,139,141,0.06);}
+  .module-dot{
+    width:38px;height:38px;border-radius:10px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;
+  }
+  .module-card h3{margin:0 0 2px;font-size:15px;color:var(--navy);}
+  .module-card p{margin:0;font-size:12.5px;color:var(--muted);}
+
+  .diff-row{display:flex;gap:8px;margin-top:18px;}
+  .diff-chip{
+    flex:1;padding:11px 6px;border-radius:10px;text-align:center;
+    font-size:13px;font-weight:600;border:1.5px solid #e3e8eb;color:var(--muted);
+  }
+  .diff-chip.active{color:#fff;}
+  .diff-chip[data-d="easy"].active{background:var(--success);border-color:var(--success);}
+  .diff-chip[data-d="medium"].active{background:var(--gold);border-color:var(--gold);}
+  .diff-chip[data-d="hard"].active{background:var(--danger);border-color:var(--danger);}
+
+  /* Quiz screen */
+  .quiz-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:16px;gap:10px;
+  }
+  .pill{
+    background:#f0f3f5;border-radius:20px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--navy2);
+    white-space:nowrap;
+  }
+  .progress-track{height:7px;background:#e7ebee;border-radius:6px;overflow:hidden;margin-bottom:20px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:6px;transition:width .3s;}
+
+  .q-tag{
+    display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;
+    padding:4px 10px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;
+  }
+  .q-tag.easy{background:rgba(30,142,90,0.12);color:var(--success);}
+  .q-tag.medium{background:rgba(212,165,55,0.15);color:#96771f;}
+  .q-tag.hard{background:rgba(193,68,60,0.12);color:var(--danger);}
+
+  .q-text{font-size:17px;font-weight:600;line-height:1.45;color:var(--navy);margin-bottom:18px;}
+  .scenario{
+    background:#f6f9fa;border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--navy2);
+    margin-bottom:14px;line-height:1.5;font-style:italic;
+  }
+
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .option{
+    text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid #e3e8eb;
+    font-size:14.5px;color:var(--text);background:#fff;line-height:1.4;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .option .letter{
+    width:24px;height:24px;border-radius:50%;background:#eef2f4;color:var(--navy2);
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+  }
+  .option.correct{border-color:var(--success);background:rgba(30,142,90,0.08);}
+  .option.correct .letter{background:var(--success);color:#fff;}
+  .option.incorrect{border-color:var(--danger);background:rgba(193,68,60,0.08);}
+  .option.incorrect .letter{background:var(--danger);color:#fff;}
+  .option:disabled{opacity:1;}
+
+  .feedback{
+    margin-top:16px;padding:14px 16px;border-radius:12px;font-size:13.5px;line-height:1.55;display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct-fb{background:rgba(30,142,90,0.08);color:#1a5c3f;}
+  .feedback.incorrect-fb{background:rgba(193,68,60,0.08);color:#7d2c26;}
+  .feedback b{display:block;margin-bottom:4px;font-size:13.5px;}
+
+  .nav-row{display:flex;gap:10px;margin-top:20px;}
+  .btn-next{
+    flex:1;padding:15px;border-radius:12px;background:var(--navy);color:#fff;font-weight:600;font-size:15px;
+    opacity:0.4;pointer-events:none;transition:opacity .2s;
+  }
+  .btn-next.enabled{opacity:1;pointer-events:auto;}
+
+  /* Results */
+  .score-circle{
+    width:140px;height:140px;border-radius:50%;margin:8px auto 20px;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    background:conic-gradient(var(--teal) calc(var(--pct,0)*1%), #e7ebee 0);
+    position:relative;
+  }
+  .score-circle::before{
+    content:"";position:absolute;width:110px;height:110px;border-radius:50%;background:#fff;
+  }
+  .score-circle .num{position:relative;font-size:30px;font-weight:800;color:var(--navy);}
+  .score-circle .lbl{position:relative;font-size:11px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;}
+
+  .rank-badge{
+    text-align:center;font-weight:700;font-size:16px;padding:10px;border-radius:12px;margin-bottom:18px;
+  }
+  .review-item{
+    border:1px solid #e3e8eb;border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:13px;
+  }
+  .review-item.wrong{border-left:4px solid var(--danger);}
+  .review-item.right{border-left:4px solid var(--success);}
+  .review-item .qq{font-weight:600;color:var(--navy);margin-bottom:4px;}
+  .review-item .aa{color:var(--muted);}
+
+  .hidden{display:none !important;}
+
+  footer.brandfoot{text-align:center;color:#8fa3ad;font-size:11.5px;margin-top:22px;letter-spacing:.3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-mark">AC</div>
+    <div class="brand-text">
+      <div class="name">adelgacode</div>
+      <div class="tag">Interactive Learning Series</div>
+    </div>
+  </div>
+
+  <!-- ===================== GATE SCREEN ===================== -->
+  <div class="card" id="screen-gate">
+    <div class="gate-icon">🔒</div>
+    <h1>Ergonomics &amp; Green Computing Quiz</h1>
+    <p class="lead">Covers Week 6 (Ergonomic Devices &amp; Workstation Design), Week 7 (Ergonomic Layout, Design &amp; Risk Assessment), and Week 8 (Green Computing &amp; the E-Waste Challenge). Enter the access code to begin.</p>
+    <input type="password" id="pw-input" placeholder="Enter access code" autocomplete="off">
+    <div class="error-msg" id="pw-error"></div>
+    <button class="btn-primary" id="pw-submit">Unlock Quiz</button>
+  </div>
+
+  <!-- ===================== SETUP SCREEN ===================== -->
+  <div class="card hidden" id="screen-setup">
+    <h1>Choose Your Focus</h1>
+    <p class="lead">Select a module and difficulty level. Questions are scenario-based and designed to test applied understanding, not just recall.</p>
+
+    <div class="module-list" id="module-list"></div>
+
+    <h2 style="margin-top:22px;">Difficulty</h2>
+    <div class="diff-row" id="diff-row">
+      <div class="diff-chip active" data-d="easy">Easy</div>
+      <div class="diff-chip active" data-d="medium">Medium</div>
+      <div class="diff-chip active" data-d="hard">Hard</div>
+    </div>
+    <p class="lead" style="margin-top:10px;font-size:12.5px;">Tip: leave all three selected for the full challenging mix, or tap to deselect a level.</p>
+
+    <input type="text" id="name-input" placeholder="Your name (for your score card)" style="margin-top:18px;">
+
+    <button class="btn-primary" id="start-btn">Start Quiz</button>
+  </div>
+
+  <!-- ===================== QUIZ SCREEN ===================== -->
+  <div class="card hidden" id="screen-quiz">
+    <div class="quiz-header">
+      <span class="pill" id="q-counter">Q1 / 10</span>
+      <span class="pill" id="q-score">Score: 0</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <span class="q-tag" id="q-difftag">medium</span>
+    <div class="scenario hidden" id="q-scenario"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+
+    <div class="feedback" id="q-feedback">
+      <b id="fb-title"></b>
+      <span id="fb-text"></span>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-next" id="next-btn">Next Question →</button>
+    </div>
+  </div>
+
+  <!-- ===================== RESULTS SCREEN ===================== -->
+  <div class="card hidden" id="screen-results">
+    <h1 id="res-title">Quiz Complete!</h1>
+    <div class="score-circle" id="score-circle">
+      <span class="num" id="res-num">0/0</span>
+      <span class="lbl">Correct</span>
+    </div>
+    <div class="rank-badge" id="res-rank"></div>
+    <p class="lead" id="res-summary"></p>
+    <h2>Review</h2>
+    <div id="review-list"></div>
+    <button class="btn-primary" id="retry-btn">Try Again</button>
+    <button class="btn-secondary" id="menu-btn">Choose Different Module</button>
+  </div>
+
+  <footer class="brandfoot">adelgacode &middot; BEd ICT &middot; University of Cape Coast</footer>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+============================================================ */
+const ACCESS_CODE = "adelga2026"; // change as needed
+
+/* ============================================================
+   QUESTION BANK
+============================================================ */
+const QUESTIONS = [
+/* ============ WEEK 6: ERGONOMIC DEVICES / WORKSTATION DESIGN ============ */
+{
+  module:"week6", difficulty:"easy",
+  question:"What is the defining characteristic of a 'neutral posture' at a computer workstation?",
+  options:[
+    "A position requiring constant muscular effort to hold",
+    "A position of ease the body can sustain for long periods with minimal effort",
+    "Any position where the user is sitting upright",
+    "A posture used only during typing tasks"
+  ], correct:1,
+  explanation:"Neutral posture is defined as a position of ease the body can maintain for prolonged periods without excessive muscular effort, giving biomechanical advantages and reducing musculoskeletal stress."
+},
+{
+  module:"week6", difficulty:"easy",
+  question:"According to OSHA figures cited in the presentation, what is the estimated direct and indirect cost per person for carpal tunnel syndrome?",
+  options:["$5,077","€50,774","$500","€5,077"], correct:1,
+  explanation:"The figure given is €50,774 per person — a cost the presentation argues far outweighs the price of preventive ergonomic devices."
+},
+{
+  module:"week6", difficulty:"medium",
+  question:"A school is setting up a shared computer lab used by different classes throughout the day. Which design consideration is emphasized as essential specifically because of this multi-user, rotating-roster context?",
+  options:[
+    "Installing the most expensive chairs available",
+    "Using anthropometric data (5th–95th percentile) to ensure adjustable furniture fits a wide range of users",
+    "Fixing all desks at a single standard height",
+    "Limiting lab access to one grade level only"
+  ], correct:1,
+  explanation:"Because labs and classrooms serve users of very different sizes throughout the day, workstation dimensions must be based on anthropometric data covering the 5th to 95th percentile of the user population."
+},
+{
+  module:"week6", difficulty:"medium",
+  question:"A student complains of neck strain ('tech neck') from looking down at their monitor all day. Which single adjustment addresses this most directly?",
+  options:[
+    "Switching to a vertical ergonomic mouse",
+    "Adding a footrest",
+    "Raising the monitor with a riser or arm so the top of the screen is at eye level",
+    "Increasing keyboard tray tilt"
+  ], correct:2,
+  explanation:"Monitor risers and arms elevate the screen to eye level, which prevents 'tech neck' and forward head tilt — the exact function called out for that device category."
+},
+{
+  module:"week6", difficulty:"medium",
+  question:"Which reach zone should the keyboard and mouse occupy on a well-organized desk?",
+  options:["Red Zone","Yellow Zone","Green Zone","Any zone, since position doesn't matter for constantly-used items"], correct:2,
+  explanation:"The Green Zone holds constantly-used items like the keyboard and mouse, positioned within easy reach without extending the arms."
+},
+{
+  module:"week6", difficulty:"hard",
+  question:"An institution is comparing two chairs. Chair A has low-density foam cushioning and a fixed backrest. Chair B has high-density contoured foam and a backrest that reclines and tracks movement. Based on the evaluation criteria discussed, what is the strongest justification for choosing Chair B?",
+  options:[
+    "Chair B is likely cheaper to manufacture",
+    "Chair B supports dynamic sitting and won't permanently deform, while Chair A encourages static posture and degrades over time",
+    "Chair A's fixed backrest is safer for young children",
+    "Foam density has no bearing on long-term comfort"
+  ], correct:1,
+  explanation:"Chairs must support dynamic sitting rather than static posture, and low-density foam permanently deforms over time, whereas high-density contoured foam maintains even weight distribution during extended sessions."
+},
+{
+  module:"week6", difficulty:"hard",
+  question:"A 100-workstation lab renovation has a total initial capital investment of $127,000 and estimated annual financial benefits of $150,000. Based on the figures presented, approximately what is the first-year ROI and payback period?",
+  options:[
+    "50% ROI, 24 months",
+    "18% ROI, 10 months",
+    "5% ROI, 18 months",
+    "100% ROI, 6 months"
+  ], correct:1,
+  explanation:"The 100-workstation model in the presentation projects an 18% first-year ROI with a payback period of 10 months, consistent with the industry benchmark of $3–$6 returned per $1 invested."
+},
+{
+  module:"week6", difficulty:"hard",
+  question:"Which sequence correctly reflects the recommended chair adjustment order for an individual user?",
+  options:[
+    "Armrest height → Lumbar support → Seat height",
+    "Seat height → Lumbar support positioning → Armrest customization",
+    "Lumbar support → Armrest → Seat height",
+    "Order does not matter as long as all three are eventually adjusted"
+  ], correct:1,
+  explanation:"The chair adjustment sequence begins with seat height (feet flat, thighs parallel, 90° knee angle), then lumbar support positioning, then armrest customization."
+},
+{
+  module:"week6", difficulty:"medium",
+  question:"A desk height of 26 inches is being evaluated for a computer lab. Is this within the recommended adjustable range?",
+  options:[
+    "No, desks should be fixed at exactly 30 inches",
+    "Yes, it falls within the recommended 22–30 inch adjustable range",
+    "No, the minimum allowed is 28 inches",
+    "Desk height recommendations don't apply to labs, only classrooms"
+  ], correct:1,
+  explanation:"Both classroom and lab desks are recommended to have an adjustable range of 22–30 inches to accommodate different user heights and seated postures."
+},
+{
+  module:"week6", difficulty:"hard",
+  question:"During rollout, an institution installs new ergonomic chairs and desks but skips the 'User Training & Education' phase, assuming the equipment is self-explanatory. What does the presentation predict will most likely happen?",
+  options:[
+    "No effect — outcomes will be identical to full training rollouts",
+    "Health benefits will be reduced, since even advanced equipment fails to help if users don't know how to adjust it properly",
+    "Students will automatically adopt neutral posture regardless of training",
+    "Maintenance costs will decrease as a result"
+  ], correct:1,
+  explanation:"The training imperative states that even the most advanced ergonomic chair or desk will fail to deliver health benefits if users don't know how to adjust it — posture education and hands-on training are critical to rollout success."
+},
+
+/* ============ WEEK 7: ERGONOMIC LAYOUT, DESIGN & RISK ASSESSMENT ============ */
+{
+  module:"week7", difficulty:"easy",
+  question:"What is the core principle of ergonomics as defined in the module?",
+  options:[
+    "Fit the worker to the job",
+    "Fit the job to the worker",
+    "Maximize output regardless of worker comfort",
+    "Standardize all workstations identically"
+  ], correct:1,
+  explanation:"The core principle stated is to fit the job to the worker, not the worker to the job — designing systems around human capabilities rather than forcing adaptation."
+},
+{
+  module:"week7", difficulty:"easy",
+  question:"Which branch of ergonomics deals with mental processes like perception, memory, and reasoning?",
+  options:["Physical ergonomics","Cognitive ergonomics","Organizational ergonomics","Environmental ergonomics"], correct:1,
+  explanation:"Cognitive ergonomics concerns mental processes — perception, memory, reasoning, and motor response — as they affect human interaction with systems."
+},
+{
+  module:"week7", difficulty:"medium",
+  question:"An assessor needs to evaluate a warehouse worker who lifts variable loads, moves throughout the day, and works in an unpredictable environment. Which assessment tool is best suited, and why?",
+  options:[
+    "RULA, because it is the fastest tool available",
+    "ROSA, because it is designed for office computer work",
+    "REBA, because it evaluates full-body posture and explicitly accounts for load and force in dynamic, unpredictable tasks",
+    "Thermal imaging alone, since it replaces the need for postural assessment"
+  ], correct:2,
+  explanation:"REBA is a comprehensive full-body tool that accounts for load/force and dynamic movement, making it suitable for diverse, unpredictable tasks like manual handling — unlike RULA (upper limb, static) or ROSA (office-specific)."
+},
+{
+  module:"week7", difficulty:"medium",
+  question:"A RULA assessment returns a score of 6. What action does this indicate?",
+  options:[
+    "Acceptable posture, no action required",
+    "Further investigation recommended, implement improvements",
+    "Investigation and changes required soon",
+    "Immediate investigation and changes required"
+  ], correct:2,
+  explanation:"A RULA score of 5–6 falls into the band requiring investigation and changes soon, one level below the most urgent category (score 7)."
+},
+{
+  module:"week7", difficulty:"medium",
+  question:"Which of the following is a genuine limitation of ROSA compared to REBA?",
+  options:[
+    "ROSA takes much longer to administer",
+    "ROSA does not assess full-body posture or manual handling and assumes predominantly seated work",
+    "ROSA cannot be used in any workplace",
+    "ROSA has no scoring system"
+  ], correct:1,
+  explanation:"ROSA is limited exclusively to office environments, does not assess full-body posture or manual handling, and assumes predominantly seated work — unlike REBA's full-body, load-inclusive scope."
+},
+{
+  module:"week7", difficulty:"hard",
+  question:"A risk is classified as 'High Likelihood × High Impact' on the risk matrix. According to the hierarchy of controls, which intervention type should be prioritized first for this risk, and within what timeframe?",
+  options:[
+    "Personal protective equipment, reviewed annually",
+    "Engineering controls, implemented within 1–3 months as immediate action",
+    "Administrative controls only, within 6–12 months",
+    "No action needed until the next audit cycle"
+  ], correct:1,
+  explanation:"High likelihood × high impact risks require immediate action — allocating resources and implementing interventions (with engineering controls being the most effective type in the hierarchy) within 1–3 months."
+},
+{
+  module:"week7", difficulty:"hard",
+  question:"An organization wants to cross-validate its ergonomic risk findings rather than rely on one method alone, combining subjective worker interviews with objective biomechanical data. Which best-practice category does this reflect?",
+  options:[
+    "Worker involvement only",
+    "Methodological rigor — specifically the multi-tool approach and objective data integration",
+    "Culture of safety exclusively",
+    "This approach is discouraged since it duplicates effort"
+  ], correct:1,
+  explanation:"Methodological rigor includes using a multi-tool approach (cross-validating with multiple methods, e.g. RULA with ROSA) and integrating objective biomechanical/environmental data with subjective worker feedback."
+},
+{
+  module:"week7", difficulty:"hard",
+  question:"During a 7-phase ergonomic risk assessment, in which phase would an assessor be expected to use RULA, REBA, or ROSA and video-record tasks for frame-by-frame analysis?",
+  options:["Phase 1: Workplace Audit","Phase 3: Worker Interview","Phase 4: Postural Assessment","Phase 7: Data Compilation"], correct:2,
+  explanation:"Phase 4 (Postural Assessment) is where validated tools such as RULA, REBA, or ROSA are applied, with tasks video-recorded for detailed, frame-by-frame analysis."
+},
+{
+  module:"week7", difficulty:"medium",
+  question:"Which statistic reflects the estimated annual cost of absenteeism due to poor ergonomics in the US alone?",
+  options:["$15,000–$30,000","$61.2 billion","33%","$3 to $6"], correct:1,
+  explanation:"The presentation cites $61.2 billion as the annual cost of absenteeism due to poor ergonomics in the US."
+},
+{
+  module:"week7", difficulty:"hard",
+  question:"A final ergonomic report needs a section that categorizes hazards as High, Medium, or Low to guide immediate resource allocation. Which report component does this describe?",
+  options:["Executive Summary","Methodology","Risk Prioritization","Implementation Plan"], correct:2,
+  explanation:"Risk Prioritization categorizes identified hazards using a Risk Matrix, clearly delineating High, Medium, and Low priority issues to guide immediate resource allocation."
+},
+
+/* ============ WEEK 8: GREEN COMPUTING & E-WASTE ============ */
+{
+  module:"week8", difficulty:"easy",
+  question:"How much e-waste was generated globally in 2022, according to the presentation?",
+  options:["22 million tonnes","62 million tonnes","82 million tonnes","7.8 million tonnes"], correct:1,
+  explanation:"Global e-waste generation reached 62 million tonnes in 2022, an 82% jump since 2010."
+},
+{
+  module:"week8", difficulty:"easy",
+  question:"What approximate percentage of global e-waste is properly recycled?",
+  options:["About 80%","About 50%","About 22%","About 95%"], correct:2,
+  explanation:"Only about 22% of e-waste is properly recycled, meaning roughly 80% ends up in landfills or informal operations."
+},
+{
+  module:"week8", difficulty:"medium",
+  question:"A recycling technician wants to justify formal (rather than informal) e-waste processing to local officials. Which fact most directly supports this argument?",
+  options:[
+    "E-waste has no recoverable value",
+    "Improper handling, especially in informal recycling, can release over a thousand different chemicals that contaminate soil, water, and air",
+    "Informal recycling is always faster than formal recycling",
+    "E-waste is biodegradable within a few months"
+  ], correct:1,
+  explanation:"Improperly handled e-waste, particularly in informal recycling, can release over a thousand different chemicals, contaminating soil, water, and air — while e-waste itself is non-biodegradable."
+},
+{
+  module:"week8", difficulty:"medium",
+  question:"What major change took effect under the Basel Convention as of January 2025?",
+  options:[
+    "All e-waste trade was banned outright",
+    "Both hazardous and non-hazardous e-waste now require written approval from importing countries before shipment",
+    "Only hazardous e-waste requires approval; non-hazardous waste remains unrestricted",
+    "The Convention was dissolved in favor of national laws only"
+  ], correct:1,
+  explanation:"As of January 2025, both hazardous and non-hazardous e-waste require written approval from importing countries before shipment, closing a long-standing loophole."
+},
+{
+  module:"week8", difficulty:"medium",
+  question:"Despite having one of the strongest e-waste frameworks globally, what percentage of e-waste does the EU actually collect under the WEEE Directive?",
+  options:["About 90%","About 65%","About 35%","About 10%"], correct:2,
+  explanation:"Even with the WEEE Directive in place, the EU only collects about 35% of its e-waste, illustrating the scale of the ongoing challenge."
+},
+{
+  module:"week8", difficulty:"hard",
+  question:"A manufacturer redesigns its laptops to be more repairable and offers extended repair services, in direct response to a 2024 EU directive. Which policy is being addressed, and what problem does it target?",
+  options:[
+    "Extended Producer Responsibility, targeting collection infrastructure",
+    "The Basel Convention, targeting cross-border trade",
+    "The Right to Repair directive, targeting planned obsolescence",
+    "The WEEE Directive, targeting recycling collection rates only"
+  ], correct:2,
+  explanation:"The Right to Repair directive, adopted in 2024, requires manufacturers to offer repair services and directly tackles planned obsolescence — the practice of designing products to fail quickly."
+},
+{
+  module:"week8", difficulty:"hard",
+  question:"Under Extended Producer Responsibility (EPR), who bears the primary financial and operational responsibility for a product's end-of-life management?",
+  options:[
+    "Taxpayers, through general government funding",
+    "Consumers, through disposal fees only",
+    "Manufacturers, often working with Producer Responsibility Organizations (PROs)",
+    "Informal waste pickers exclusively"
+  ], correct:2,
+  explanation:"EPR shifts the burden of e-waste management from taxpayers to manufacturers, who bear financial and operational responsibility and often work with PROs to manage collection and recycling."
+},
+{
+  module:"week8", difficulty:"hard",
+  question:"Roughly what share of global e-waste is estimated to be illegally traded or dumped, despite international agreements like the Basel Convention?",
+  options:["10-20%","30-40%","60-90%","Less than 5%"], correct:2,
+  explanation:"A shocking 60-90% of global e-waste is illegally traded or dumped, undermining international regulatory efforts despite the Basel Convention's 2025 Ban Amendment."
+},
+{
+  module:"week8", difficulty:"medium",
+  question:"According to the ILO figures cited, approximately how many children work in waste processing globally, with many directly exposed to e-waste?",
+  options:["1.5 million","6.5 million","16.5 million","26.5 million"], correct:2,
+  explanation:"The International Labour Organization estimates that 16.5 million children work in waste processing, many directly exposed to hazardous e-waste materials."
+},
+{
+  module:"week8", difficulty:"hard",
+  question:"A policy analyst argues that laws alone won't solve the e-waste crisis, even where frameworks like the Basel Convention and WEEE Directive exist. Based on the challenges discussed, which combination best explains why?",
+  options:[
+    "Consumers are too well-informed, causing regulatory overreach",
+    "Lack of enforcement resources in developing countries, informal recycling economies providing income, and illegal trade exploiting regulatory gaps",
+    "Manufacturers fully support all regulations with no resistance",
+    "There is no financial incentive tied to proper e-waste management anywhere"
+  ], correct:1,
+  explanation:"Barriers include developing countries lacking resources/infrastructure to enforce rules, informal recycling providing income that competes with formal systems, illegal trade exploiting gaps between countries' regulations, low consumer awareness, and manufacturer resistance."
+},
+];
+
+/* ============================================================
+   MODULE METADATA
+============================================================ */
+const MODULES = {
+  week6: { title:"Week 6: Ergonomic Devices & Workstation Design", desc:"Classroom & lab equipment, chairs, desks, ROI", color:"#0f8b8d" },
+  week7: { title:"Week 7: Ergonomic Layout, Design & Risk Assessment", desc:"RULA, REBA, ROSA, hierarchy of controls", color:"#1b2a41" },
+  week8: { title:"Week 8: Green Computing & the E-Waste Challenge", desc:"Basel Convention, WEEE, EPR, circular economy", color:"#d4a537" },
+  all:   { title:"Full Mix: All Three Weeks", desc:"Comprehensive challenge across every topic", color:"#c1443c" }
+};
+
+/* ============================================================
+   STATE
+============================================================ */
+let state = {
+  selectedModule: "all",
+  selectedDiffs: new Set(["easy","medium","hard"]),
+  pool: [],
+  idx: 0,
+  score: 0,
+  answers: [], // {question, chosen, correctIdx, isCorrect, explanation, options}
+  name: ""
+};
+
+/* ============================================================
+   DOM refs
+============================================================ */
+const screens = {
+  gate: document.getElementById("screen-gate"),
+  setup: document.getElementById("screen-setup"),
+  quiz: document.getElementById("screen-quiz"),
+  results: document.getElementById("screen-results")
+};
+function showScreen(name){
+  Object.values(screens).forEach(s=>s.classList.add("hidden"));
+  screens[name].classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============================================================
+   GATE LOGIC
+============================================================ */
+document.getElementById("pw-submit").addEventListener("click", tryUnlock);
+document.getElementById("pw-input").addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+function tryUnlock(){
+  const val = document.getElementById("pw-input").value.trim();
+  if(val === ACCESS_CODE){
+    buildModuleList();
+    showScreen("setup");
+  } else {
+    document.getElementById("pw-error").textContent = "Incorrect access code. Please try again.";
+  }
+}
+
+/* ============================================================
+   SETUP SCREEN
+============================================================ */
+function buildModuleList(){
+  const list = document.getElementById("module-list");
+  list.innerHTML = "";
+  Object.keys(MODULES).forEach(key=>{
+    const m = MODULES[key];
+    const count = key==="all" ? QUESTIONS.length : QUESTIONS.filter(q=>q.module===key).length;
+    const div = document.createElement("div");
+    div.className = "module-card" + (key===state.selectedModule ? " selected":"");
+    div.dataset.key = key;
+    div.innerHTML = `
+      <div class="module-dot" style="background:${m.color}">${count}</div>
+      <div>
+        <h3>${m.title}</h3>
+        <p>${m.desc}</p>
+      </div>`;
+    div.addEventListener("click", ()=>{
+      state.selectedModule = key;
+      document.querySelectorAll(".module-card").forEach(c=>c.classList.remove("selected"));
+      div.classList.add("selected");
+    });
+    list.appendChild(div);
+  });
+}
+
+document.querySelectorAll(".diff-chip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    const d = chip.dataset.d;
+    if(state.selectedDiffs.has(d)){
+      if(state.selectedDiffs.size>1){ state.selectedDiffs.delete(d); chip.classList.remove("active"); }
+    } else {
+      state.selectedDiffs.add(d); chip.classList.add("active");
+    }
+  });
+});
+
+document.getElementById("start-btn").addEventListener("click", ()=>{
+  state.name = document.getElementById("name-input").value.trim() || "Learner";
+  let pool = QUESTIONS.filter(q=>{
+    const modMatch = state.selectedModule==="all" ? true : q.module===state.selectedModule;
+    return modMatch && state.selectedDiffs.has(q.difficulty);
+  });
+  if(pool.length===0){
+    alert("No questions match that selection — please choose at least one difficulty.");
+    return;
+  }
+  // shuffle
+  pool = pool.map(q=>({...q, options: shuffleOptions(q)}));
+  pool = shuffleArray(pool);
+  state.pool = pool;
+  state.idx = 0;
+  state.score = 0;
+  state.answers = [];
+  renderQuestion();
+  showScreen("quiz");
+});
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function shuffleOptions(q){
+  const optWithIdx = q.options.map((text,i)=>({text, isCorrect:i===q.correct}));
+  const shuffled = shuffleArray(optWithIdx);
+  return shuffled;
+}
+
+/* ============================================================
+   QUIZ SCREEN
+============================================================ */
+function renderQuestion(){
+  const q = state.pool[state.idx];
+  document.getElementById("q-counter").textContent = `Q${state.idx+1} / ${state.pool.length}`;
+  document.getElementById("q-score").textContent = `Score: ${state.score}`;
+  document.getElementById("progress-fill").style.width = `${(state.idx/state.pool.length)*100}%`;
+
+  const tag = document.getElementById("q-difftag");
+  tag.textContent = q.difficulty;
+  tag.className = "q-tag " + q.difficulty;
+
+  document.getElementById("q-scenario").classList.add("hidden");
+  document.getElementById("q-text").textContent = q.question;
+
+  const optionsDiv = document.getElementById("q-options");
+  optionsDiv.innerHTML = "";
+  const letters = ["A","B","C","D"];
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt.text}</span>`;
+    btn.addEventListener("click", ()=>selectAnswer(i));
+    optionsDiv.appendChild(btn);
+  });
+
+  document.getElementById("q-feedback").classList.remove("show","correct-fb","incorrect-fb");
+  document.getElementById("next-btn").classList.remove("enabled");
+}
+
+function selectAnswer(i){
+  const q = state.pool[state.idx];
+  const buttons = document.querySelectorAll("#q-options .option");
+  buttons.forEach(b=>b.disabled = true);
+
+  const chosen = q.options[i];
+  const isCorrect = chosen.isCorrect;
+
+  buttons.forEach((b,idx)=>{
+    if(q.options[idx].isCorrect) b.classList.add("correct");
+    else if(idx===i && !isCorrect) b.classList.add("incorrect");
+  });
+
+  if(isCorrect) state.score++;
+  document.getElementById("q-score").textContent = `Score: ${state.score}`;
+
+  const fb = document.getElementById("q-feedback");
+  fb.classList.add("show", isCorrect ? "correct-fb":"incorrect-fb");
+  document.getElementById("fb-title").textContent = isCorrect ? "✓ Correct" : "✗ Not quite";
+  document.getElementById("fb-text").textContent = q.explanation;
+
+  state.answers.push({
+    question:q.question,
+    chosenText: chosen.text,
+    correctText: q.options.find(o=>o.isCorrect).text,
+    isCorrect,
+    explanation:q.explanation,
+    module:q.module
+  });
+
+  document.getElementById("next-btn").classList.add("enabled");
+}
+
+document.getElementById("next-btn").addEventListener("click", ()=>{
+  state.idx++;
+  if(state.idx >= state.pool.length){
+    renderResults();
+    showScreen("results");
+  } else {
+    renderQuestion();
+  }
+});
+
+/* ============================================================
+   RESULTS SCREEN
+============================================================ */
+function renderResults(){
+  const total = state.pool.length;
+  const pct = Math.round((state.score/total)*100);
+  document.getElementById("res-num").textContent = `${state.score}/${total}`;
+  document.getElementById("score-circle").style.setProperty("--pct", pct);
+
+  const rankEl = document.getElementById("res-rank");
+  let rank, color;
+  if(pct>=90){ rank="🏆 Ergonomics & E-Waste Expert"; color="rgba(30,142,90,0.12)"; rankEl.style.color="#1a5c3f"; }
+  else if(pct>=75){ rank="⭐ Strong Grasp of the Material"; color="rgba(15,139,141,0.12)"; rankEl.style.color="#0f6567"; }
+  else if(pct>=50){ rank="📘 Solid Foundation, Room to Grow"; color="rgba(212,165,55,0.15)"; rankEl.style.color="#96771f"; }
+  else { rank="🔁 Time for a Focused Review"; color="rgba(193,68,60,0.12)"; rankEl.style.color="#7d2c26"; }
+  rankEl.textContent = rank;
+  rankEl.style.background = color;
+
+  document.getElementById("res-summary").textContent =
+    `${state.name}, you scored ${pct}% on this set. Review your answers below to reinforce the concepts you missed.`;
+
+  const reviewList = document.getElementById("review-list");
+  reviewList.innerHTML = "";
+  state.answers.forEach((a,i)=>{
+    const div = document.createElement("div");
+    div.className = "review-item " + (a.isCorrect ? "right":"wrong");
+    div.innerHTML = `
+      <div class="qq">${i+1}. ${a.question}</div>
+      <div class="aa">${a.isCorrect ? "Your answer: "+a.chosenText : "You answered: "+a.chosenText+" — Correct: "+a.correctText}</div>
+    `;
+    reviewList.appendChild(div);
+  });
+}
+
+document.getElementById("retry-btn").addEventListener("click", ()=>{
+  showScreen("setup");
+});
+document.getElementById("menu-btn").addEventListener("click", ()=>{
+  showScreen("setup");
+});
+</script>
+</body>
+</html>
