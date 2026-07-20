@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Vision & AI Literacy Quiz | adelgacode</title>
+<style>
+  :root{
+    --navy:#0b1e3d;
+    --navy-deep:#071328;
+    --teal:#0f8b8d;
+    --teal-light:#4fd1c5;
+    --gold:#e0a72e;
+    --gold-soft:#f4c95d;
+    --cream:#f7f4ec;
+    --danger:#e05263;
+    --success:#2fae6b;
+    --text-dark:#101820;
+    --text-mid:#4a5568;
+    --radius:14px;
+    --shadow:0 12px 30px rgba(7,19,40,0.18);
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(15,139,141,0.25), transparent 45%),
+      radial-gradient(circle at 90% 85%, rgba(224,167,46,0.18), transparent 40%),
+      linear-gradient(160deg, var(--navy-deep), var(--navy) 60%);
+    min-height:100vh;
+    color:var(--text-dark);
+    padding:24px 14px 60px;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  .brandbar{
+    display:flex; align-items:center; justify-content:space-between;
+    color:var(--cream); margin-bottom:18px; font-size:13px; letter-spacing:1px;
+    opacity:0.85; text-transform:uppercase;
+  }
+  .brandbar span.dot{color:var(--gold-soft);}
+  .card{
+    background:var(--cream);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:32px 28px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background:linear-gradient(90deg, var(--teal), var(--gold));
+  }
+  h1{
+    font-size:1.5rem; margin:0 0 6px; color:var(--navy);
+    letter-spacing:-0.5px;
+  }
+  .subtitle{color:var(--text-mid); font-size:0.95rem; margin-bottom:22px; line-height:1.5;}
+  label{display:block; font-weight:600; margin:14px 0 6px; color:var(--navy); font-size:0.9rem;}
+  input[type=text], input[type=email], input[type=password]{
+    width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid #d8d3c4;
+    font-size:1rem; background:#fff; color:var(--text-dark);
+  }
+  input:focus{outline:none; border-color:var(--teal);}
+  .btn{
+    margin-top:22px; width:100%; padding:14px 18px; border:none; border-radius:10px;
+    background:linear-gradient(90deg, var(--teal), #0c6f70);
+    color:#fff; font-size:1.02rem; font-weight:700; cursor:pointer;
+    letter-spacing:0.3px; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(15,139,141,0.35);}
+  .btn:disabled{opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none;}
+  .btn.gold{background:linear-gradient(90deg, var(--gold), #c98a1c);}
+  .error-msg{color:var(--danger); font-size:0.85rem; margin-top:8px; min-height:18px;}
+  .hidden{display:none !important;}
+
+  /* progress */
+  .progress-outer{
+    background:#e3ded0; border-radius:20px; height:10px; overflow:hidden; margin-bottom:6px;
+  }
+  .progress-inner{
+    height:100%; background:linear-gradient(90deg, var(--teal), var(--gold)); width:0%;
+    transition:width .35s ease;
+  }
+  .progress-label{
+    display:flex; justify-content:space-between; font-size:0.78rem; color:var(--text-mid);
+    margin-bottom:18px;
+  }
+  .section-tag{
+    display:inline-block; background:rgba(15,139,141,0.12); color:var(--teal);
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.6px;
+    padding:4px 10px; border-radius:20px; margin-bottom:12px;
+  }
+  .q-text{font-size:1.08rem; font-weight:600; color:var(--navy); line-height:1.45; margin-bottom:18px;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .option{
+    text-align:left; padding:13px 16px; border:1.5px solid #ddd6c4; border-radius:10px;
+    background:#fff; cursor:pointer; font-size:0.96rem; color:var(--text-dark);
+    transition:all .15s ease; display:flex; align-items:center; gap:10px;
+  }
+  .option:hover{border-color:var(--teal); background:rgba(15,139,141,0.05);}
+  .option .letter{
+    width:24px; height:24px; border-radius:50%; background:#eee7d4; color:var(--navy);
+    font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .option.correct{border-color:var(--success); background:rgba(47,174,107,0.12);}
+  .option.correct .letter{background:var(--success); color:#fff;}
+  .option.wrong{border-color:var(--danger); background:rgba(224,82,99,0.1);}
+  .option.wrong .letter{background:var(--danger); color:#fff;}
+  .option.disabled{cursor:default;}
+  .feedback{
+    margin-top:16px; padding:13px 15px; border-radius:10px; font-size:0.9rem; line-height:1.5;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct-fb{background:rgba(47,174,107,0.12); color:#1a6b45; border:1px solid rgba(47,174,107,0.35);}
+  .feedback.wrong-fb{background:rgba(224,82,99,0.1); color:#a3313d; border:1px solid rgba(224,82,99,0.3);}
+  .nav-row{display:flex; justify-content:flex-end; margin-top:20px;}
+
+  /* results */
+  .score-circle{
+    width:150px; height:150px; border-radius:50%; margin:10px auto 20px;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    background:conic-gradient(var(--teal) calc(var(--pct)*1%), #e3ded0 0);
+    position:relative;
+  }
+  .score-circle::before{
+    content:""; position:absolute; width:118px; height:118px; border-radius:50%; background:var(--cream);
+  }
+  .score-circle .pct{position:relative; font-size:1.6rem; font-weight:800; color:var(--navy);}
+  .score-circle .lbl{position:relative; font-size:0.7rem; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.5px;}
+  .breakdown{display:flex; gap:14px; margin:18px 0; flex-wrap:wrap;}
+  .breakdown .bx{
+    flex:1; min-width:140px; background:#fff; border:1px solid #e3ded0; border-radius:10px; padding:14px;
+    text-align:center;
+  }
+  .breakdown .bx .num{font-size:1.4rem; font-weight:800; color:var(--teal);}
+  .breakdown .bx .lab{font-size:0.75rem; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.4px; margin-top:2px;}
+  .status-msg{font-size:0.85rem; text-align:center; margin-top:10px; min-height:20px; color:var(--text-mid);}
+  .status-msg.ok{color:var(--success); font-weight:600;}
+  .status-msg.err{color:var(--danger); font-weight:600;}
+  footer.credit{text-align:center; color:var(--cream); opacity:0.65; font-size:0.75rem; margin-top:20px; letter-spacing:0.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brandbar">
+    <span>adelgacode<span class="dot">•</span>learning tools</span>
+    <span id="brandTag">CV &amp; AI Literacy Quiz</span>
+  </div>
+
+  <!-- GATE 1: PASSWORD -->
+  <div class="card" id="gateScreen">
+    <h1>🔒 Restricted Quiz Access</h1>
+    <p class="subtitle">This quiz is password protected. Enter the access code provided by your instructor to continue.</p>
+    <label for="pwInput">Access Password</label>
+    <input type="password" id="pwInput" placeholder="Enter password">
+    <div class="error-msg" id="pwError"></div>
+    <button class="btn" onclick="checkPassword()">Unlock Quiz</button>
+  </div>
+
+  <!-- GATE 2: NAME / EMAIL -->
+  <div class="card hidden" id="infoScreen">
+    <h1>Computer Vision &amp; AI Literacy Challenge</h1>
+    <p class="subtitle">50 challenging multiple-choice questions covering <strong>Computer Vision</strong> (20 questions) and <strong>Computational Thinking &amp; AI Literacy</strong> (30 questions). Enter your details so your result can be recorded.</p>
+    <label for="nameInput">Full Name</label>
+    <input type="text" id="nameInput" placeholder="e.g. Kofi Mensah">
+    <label for="emailInput">Email Address</label>
+    <input type="email" id="emailInput" placeholder="e.g. kofi@example.com">
+    <div class="error-msg" id="infoError"></div>
+    <button class="btn gold" onclick="startQuiz()">Start Quiz →</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="card hidden" id="quizScreen">
+    <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
+    <div class="progress-label">
+      <span id="progressText">Question 1 of 50</span>
+      <span id="scoreText">Score: 0</span>
+    </div>
+    <span class="section-tag" id="sectionTag">Computer Vision</span>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="optionsBox"></div>
+    <div class="feedback" id="feedbackBox"></div>
+    <div class="nav-row">
+      <button class="btn" id="nextBtn" style="max-width:180px;" disabled onclick="nextQuestion()">Next Question →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="card hidden" id="resultScreen">
+    <h1>Quiz Complete </h1>
+    <p class="subtitle" id="resultIntro"></p>
+    <div class="score-circle" id="scoreCircle" style="--pct:0;">
+      <div class="pct" id="pctText">0%</div>
+      <div class="lbl">Overall</div>
+    </div>
+    <div class="breakdown">
+      <div class="bx"><div class="num" id="cvScore">0/20</div><div class="lab">Computer Vision</div></div>
+      <div class="bx"><div class="num" id="ctScore">0/30</div><div class="lab">CT &amp; AI Literacy</div></div>
+      <div class="bx"><div class="num" id="totalScore">0/50</div><div class="lab">Total Correct</div></div>
+    </div>
+    <button class="btn" onclick="sendResults()" id="sendBtn">Submit My Result</button>
+    <div class="status-msg" id="sendStatus"></div>
+  </div>
+
+  <footer class="credit">Built by adelgacode</footer>
+</div>
+
+<script>
+const PASSWORD = "adelgacode";
+const RECEIVER_EMAIL = "iddrisui279@gmail.com";
+
+const questions = [
+// ---------------- COMPUTER VISION (20) ----------------
+{s:"Computer Vision", q:"Which best defines Computer Vision?", o:["A field of AI focused on generating human speech","A field of AI that enables computers to interpret and understand visual information","A method for encrypting image files","A hardware standard for camera manufacturing"], c:1, e:"Computer Vision is the field of AI concerned with enabling machines to interpret and understand visual information from the world."},
+{s:"Computer Vision", q:"Which is NOT one of the key components of computer vision listed?", o:["Image Acquisition","Image Processing","Audio Processing","Feature Extraction"], c:2, e:"Audio Processing deals with sound, not visual data, so it is not a component of computer vision."},
+{s:"Computer Vision", q:"What does a computer process instead of light, the way the eye does?", o:["Sound waves","Numerical data (pixels)","Electrical impulses","Vector graphics"], c:1, e:"Computers work with numerical pixel values rather than perceiving light directly like the human eye."},
+{s:"Computer Vision", q:"In a grayscale image, what does a pixel value of 0 represent?", o:["Pure white","Black","Mid-grey","Transparent"], c:1, e:"In grayscale imaging, 0 represents black and the maximum value (usually 255) represents white."},
+{s:"Computer Vision", q:"In a colour (RGB) image, how many values represent each pixel?", o:["One","Two","Three (Red, Green, Blue)","Four"], c:2, e:"An RGB pixel is represented by three values corresponding to the Red, Green, and Blue colour channels."},
+{s:"Computer Vision", q:"Resolution in image properties refers to:", o:["The colour depth of an image","The number of pixels (width × height)","The file compression ratio","The frame rate of a video"], c:1, e:"Resolution describes how many pixels make up an image, expressed as width × height."},
+{s:"Computer Vision", q:"Which enhancement operation stretches the range of pixel values?", o:["Cropping","Contrast enhancement","Rotation","Translation"], c:1, e:"Contrast enhancement stretches the range of pixel intensity values to make details more visible."},
+{s:"Computer Vision", q:"Which is a geometric transformation, not an enhancement?", o:["Brightness adjustment","Noise reduction","Scaling","Contrast stretching"], c:2, e:"Scaling changes the geometry/size of an image, unlike enhancements which adjust intensity values."},
+{s:"Computer Vision", q:"In convolution, what is the small matrix applied over each pixel called?", o:["Vector","Kernel","Tensor","Node"], c:1, e:"A kernel (or filter) is the small matrix slid over an image during convolution operations."},
+{s:"Computer Vision", q:"Which filter smooths an image and reduces noise?", o:["Sharpen filter","Edge detection filter","Blur filter","Threshold filter"], c:2, e:"A blur filter averages neighbouring pixel values, smoothing the image and reducing noise."},
+{s:"Computer Vision", q:"Which is a point where edges meet in an image?", o:["Contour","Corner","Centroid","Vertex map"], c:1, e:"A corner is defined as the point where two or more edges intersect."},
+{s:"Computer Vision", q:"SIFT stands for:", o:["Simple Image Feature Tracker","Scale-Invariant Feature Transform","Structured Interpolation for Textures","Segmented Image Filtering Technique"], c:1, e:"SIFT (Scale-Invariant Feature Transform) detects and describes local features that remain stable across scale and rotation changes."},
+{s:"Computer Vision", q:"In object detection, what is drawn around a detected object?", o:["A heat map","A bounding box","A histogram","A gradient arrow"], c:1, e:"A bounding box is drawn around an object to mark its location within the image."},
+{s:"Computer Vision", q:"Which recognition approach compares an image with stored templates?", o:["Deep feature matching","Optical flow analysis","Template matching","Semantic segmentation"], c:2, e:"Template matching compares a target image against a set of pre-stored reference templates."},
+{s:"Computer Vision", q:"Which is a traditional, pre-machine-learning, computer vision method?", o:["Convolutional Neural Networks","Transformer-based vision models","Hand-crafted features and rule-based systems","Reinforcement learning"], c:2, e:"Before deep learning, computer vision relied on hand-crafted features and rule-based systems designed by engineers."},
+{s:"Computer Vision", q:"CNN stands for:", o:["Central Neural Node","Convolutional Neural Network","Computer Numerical Network","Cascading Node Notation"], c:1, e:"CNN stands for Convolutional Neural Network, a deep learning architecture widely used in vision tasks."},
+{s:"Computer Vision", q:"In a CNN learning process, what do early layers typically detect?", o:["Complete objects and faces","Edges and simple shapes","Semantic meaning of scenes","Motion trajectories"], c:1, e:"Early CNN layers typically learn to detect simple features like edges and shapes, with deeper layers combining these into complex representations."},
+{s:"Computer Vision", q:"Which is a professional, not everyday, application of computer vision?", o:["Face unlock on a smartphone","Medical imaging (X-ray and MRI analysis)","Photo filters on social media","Barcode scanning at a supermarket"], c:1, e:"Medical imaging analysis is a specialised, professional application compared to everyday consumer uses like filters or unlocking a phone."},
+{s:"Computer Vision", q:"Which library is the open-source computer vision library?", o:["TensorVision","PyVision","OpenCV","VisionKit"], c:2, e:"OpenCV (Open Source Computer Vision Library) is the widely used open-source library for computer vision tasks."},
+{s:"Computer Vision", q:"Which is a data challenge, not technical or computational?", o:["Real-time processing speed","Bias in datasets","Memory usage during training","GPU parallelization"], c:1, e:"Bias in datasets is a data-related challenge, distinct from technical/computational issues like speed or memory."},
+
+// ---------------- COMPUTATIONAL THINKING & AI LITERACY (30) ----------------
+{s:"CT & AI Literacy", q:"Computational Thinking is best described as:", o:["A programming language for AI systems","A problem-solving methodology involving decomposition, patterns, algorithms, and abstraction","A hardware architecture for computation","A branch of statistics for AI evaluation"], c:1, e:"Computational Thinking is a problem-solving methodology built on decomposition, pattern recognition, abstraction, and algorithm design."},
+{s:"CT & AI Literacy", q:"Which is NOT part of the core concept of Computational Thinking?", o:["Recognizing patterns and relationships","Creating step-by-step solutions","Memorizing programming syntax","Using abstraction to focus on essential features"], c:2, e:"Memorizing programming syntax is not a core CT concept; CT is about the thinking process, not syntax recall."},
+{s:"CT & AI Literacy", q:"Breaking a complex problem into smaller, manageable sub-problems is called:", o:["Abstraction","Pattern recognition","Decomposition","Algorithm design"], c:2, e:"Decomposition is the process of breaking a complex problem into smaller, manageable sub-problems."},
+{s:"CT & AI Literacy", q:"Planning a wedding by separating it into venue, catering, and invitations is an example of:", o:["Algorithm design","Decomposition","Pattern recognition","Abstraction"], c:1, e:"Splitting a big task like a wedding into venue, catering, and invitations demonstrates decomposition."},
+{s:"CT & AI Literacy", q:"Recognizing that different sorting algorithms share common structures is an example of:", o:["Decomposition","Pattern recognition","Abstraction","Algorithm design"], c:1, e:"Identifying shared structures across sorting algorithms is a classic example of pattern recognition."},
+{s:"CT & AI Literacy", q:"A map showing only relevant roads and landmarks demonstrates:", o:["Decomposition","Pattern recognition","Abstraction","Algorithm design"], c:2, e:"A map simplifies reality by showing only essential details, which is the essence of abstraction."},
+{s:"CT & AI Literacy", q:"A recipe used for cooking is given as an example of:", o:["Decomposition","Algorithm design","Abstraction","Pattern recognition"], c:1, e:"A recipe provides step-by-step instructions, making it a real-world example of algorithm design."},
+{s:"CT & AI Literacy", q:"How many core pillars of Computational Thinking are identified?", o:["Three","Five","Four","Six"], c:2, e:"The lecture identifies four core pillars: decomposition, pattern recognition, abstraction, and algorithm design."},
+{s:"CT & AI Literacy", q:"Which is part of AI Literacy as defined in the lecture?", o:["Technical understanding of how AI systems work","Memorizing AI model architectures","Writing machine code by hand","Designing computer hardware"], c:0, e:"AI Literacy includes a basic technical understanding of how AI systems work, alongside critical evaluation and ethical awareness."},
+{s:"CT & AI Literacy", q:"Critical Evaluation within AI Literacy mainly involves:", o:["Building new AI models from scratch","Assessing AI capabilities, limitations, and biases","Marketing AI products","Coding neural networks"], c:1, e:"Critical Evaluation means assessing what an AI system can and cannot do, along with its potential biases."},
+{s:"CT & AI Literacy", q:"Which is given as a reason why AI Literacy matters?", o:["It replaces the need for computational thinking","Citizens need to make informed decisions about AI","It eliminates the need for ethics training","AI systems no longer need human oversight"], c:1, e:"AI Literacy matters because citizens need to make informed decisions about AI in daily life and society."},
+{s:"CT & AI Literacy", q:"In the CT to AI Understanding connection, which CT pillar is fundamental to machine learning?", o:["Abstraction","Pattern recognition","Decomposition","Algorithm design"], c:1, e:"Pattern recognition is described as fundamental to how machine learning systems operate."},
+{s:"CT & AI Literacy", q:"What forms the foundation of all AI systems?", o:["Fuzzy logic","Algorithms","Neural hardware","Cloud servers"], c:1, e:"Algorithms are described as the foundation upon which all AI systems are built."},
+{s:"CT & AI Literacy", q:"How can AI literacy enhance Computational Thinking?", o:["AI tools can automate routine computational tasks","AI eliminates the need for decomposition","AI replaces algorithm design entirely","AI removes the need for abstraction"], c:0, e:"AI tools can automate routine computational tasks, which is one way AI literacy reinforces and enhances CT."},
+{s:"CT & AI Literacy", q:"In the Healthcare application example, what role does AI play?", o:["Managing hospital billing systems","Assisting in medical imaging and drug discovery","Scheduling patient appointments only","Replacing doctors entirely"], c:1, e:"In healthcare, AI is highlighted as assisting with medical imaging analysis and drug discovery."},
+{s:"CT & AI Literacy", q:"In the Business application example, AI is used for:", o:["Chatbots, recommendation systems, and predictive analytics","Physical inventory counting","Manual payroll processing","Printing invoices"], c:0, e:"In business, AI applications include chatbots, recommendation systems, and predictive analytics."},
+{s:"CT & AI Literacy", q:"Which is identified as a Computational Thinking challenge in teaching?", o:["Students think it is only about programming","Students find it too easy","There are no real-world applications","It cannot be taught without a computer"], c:0, e:"A common CT teaching challenge is that students mistakenly think it is only about programming."},
+{s:"CT & AI Literacy", q:"The \"black box\" perception is a challenge related to:", o:["Computational Thinking","AI Literacy","Hardware design","Network security"], c:1, e:"The 'black box' perception, where AI systems seem opaque and hard to understand, is an AI Literacy challenge."},
+{s:"CT & AI Literacy", q:"Which CT pedagogical strategy involves teaching concepts without computers?", o:["Progressive complexity","Unplugged activities","Reflection and metacognition","Problem-based learning"], c:1, e:"Unplugged activities teach CT concepts using physical objects and activities rather than computers."},
+{s:"CT & AI Literacy", q:"\"How would you organize a school evacuation?\" is an example of which CT strategy?", o:["Unplugged activities","Reflection and metacognition","Problem-based learning","Progressive complexity"], c:2, e:"This authentic, complex problem is used as an example under the Problem-Based Learning strategy."},
+{s:"CT & AI Literacy", q:"Which AI Literacy strategy uses accessible tools like ChatGPT and image generators?", o:["Case study analysis","Hands-on exploration","Demystification approach","Critical evaluation framework"], c:1, e:"Hands-On Exploration involves using accessible AI tools such as ChatGPT and image generators to experiment and observe outputs."},
+{s:"CT & AI Literacy", q:"Showing simple AI models like decision trees and explaining training data is part of:", o:["Hands-on exploration","Case study analysis","Demystification approach","Critical evaluation framework"], c:2, e:"The Demystification Approach uses simple models like decision trees and analogies to make AI concepts accessible."},
+{s:"CT & AI Literacy", q:"In the AI Audit Project activity, students are asked to:", o:["Design a brand-new AI system from scratch","Choose an existing AI system and evaluate its performance, biases, and societal impact","Write code for a neural network","Compare traditional algorithms only"], c:1, e:"The AI Audit Project has students select an existing AI system and evaluate its performance, biases, and societal impact."},
+{s:"CT & AI Literacy", q:"The Algorithm vs AI Comparison activity asks students to:", o:["Solve the same problem with traditional algorithms and AI, then compare approaches","Audit an AI system for bias only","Design a campus problem-solving app","Build a portfolio of CT projects"], c:0, e:"This activity has students solve the same problem using traditional algorithms and AI, then compare the two approaches."},
+{s:"CT & AI Literacy", q:"Which is listed under Computational Thinking Assessment strategies?", o:["AI tool evaluation reports","Problem decomposition exercises","Bias detection exercises","Ethical scenario analysis"], c:1, e:"Problem decomposition exercises are listed as part of Computational Thinking assessment strategies."},
+{s:"CT & AI Literacy", q:"Which tool is listed under Computational Thinking Tools?", o:["Teachable Machine","Scratch (visual programming)","Moral Machine","AI4ALL materials"], c:1, e:"Scratch, a visual programming tool, is listed among the Computational Thinking Tools."},
+{s:"CT & AI Literacy", q:"MIT's Moral Machine experiment is listed under which category of resources?", o:["Computational Thinking Tools","AI Literacy Resources","Combined Resources","Assessment Strategies"], c:1, e:"MIT's Moral Machine experiment is categorised under AI Literacy Resources."},
+{s:"CT & AI Literacy", q:"Which strategy provides alternative non-digital activities for inclusion?", o:["Combat stereotypes","Cultural sensitivity","Address digital divides","Accommodate different learning styles"], c:2, e:"Addressing digital divides involves providing alternative non-digital activities to ensure equitable access."},
+{s:"CT & AI Literacy", q:"Which phase of the Implementation Action Plan focuses on portfolio compilation and reflection?", o:["Phase 1: Foundation Building","Phase 2: Skill Development","Phase 3: Application and Integration","Phase 4: Reflection and Extension"], c:3, e:"Phase 4: Reflection and Extension focuses on portfolio compilation, peer review, and reflection on the learning journey."},
+{s:"CT & AI Literacy", q:"Which statement best reflects the relationship between technology decisions and society?", o:["Technology decisions are purely technical and have no human impact","Ethics are central because technology decisions have human consequences that must be carefully considered","Society should leave all decisions to AI developers","Ethical considerations slow down innovation unnecessarily"], c:1, e:"The lecture emphasizes that ethics are central because technology decisions carry real human consequences."}
+];
+
+let current = 0;
+let score = 0;
+let cvCorrect = 0;
+let ctCorrect = 0;
+let studentName = "";
+let studentEmail = "";
+let locked = false;
+
+function checkPassword(){
+  const val = document.getElementById('pwInput').value.trim();
+  if(val === PASSWORD){
+    document.getElementById('gateScreen').classList.add('hidden');
+    document.getElementById('infoScreen').classList.remove('hidden');
+  } else {
+    document.getElementById('pwError').textContent = "Incorrect password. Please try again.";
+  }
+}
+
+function startQuiz(){
+  const name = document.getElementById('nameInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!name){
+    document.getElementById('infoError').textContent = "Please enter your full name.";
+    return;
+  }
+  if(!emailRe.test(email)){
+    document.getElementById('infoError').textContent = "Please enter a valid email address.";
+    return;
+  }
+  studentName = name;
+  studentEmail = email;
+  document.getElementById('infoScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const q = questions[current];
+  document.getElementById('sectionTag').textContent = q.s;
+  document.getElementById('qText').textContent = (current+1) + ". " + q.q;
+  document.getElementById('progressText').textContent = `Question ${current+1} of ${questions.length}`;
+  document.getElementById('scoreText').textContent = `Score: ${score}`;
+  document.getElementById('progressBar').style.width = ((current)/questions.length*100) + '%';
+
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.o.forEach((optText, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="letter">${letters[idx]}</span><span>${optText}</span>`;
+    div.onclick = () => selectAnswer(idx);
+    box.appendChild(div);
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback';
+  fb.textContent = '';
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = (current === questions.length-1) ? "See My Results →" : "Next Question →";
+}
+
+function selectAnswer(idx){
+  if(locked) return;
+  locked = true;
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach((el, i) => {
+    el.classList.add('disabled');
+    if(i === q.c) el.classList.add('correct');
+    if(i === idx && idx !== q.c) el.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  if(idx === q.c){
+    score++;
+    if(q.s === "Computer Vision") cvCorrect++; else ctCorrect++;
+    fb.className = 'feedback show correct-fb';
+    fb.textContent = " Correct! " + q.e;
+  } else {
+    fb.className = 'feedback show wrong-fb';
+    fb.textContent = " Not quite. " + q.e;
+  }
+  document.getElementById('scoreText').textContent = `Score: ${score}`;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= questions.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults(){
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+  document.getElementById('progressBar').style.width = '100%';
+
+  const pct = Math.round((score/questions.length)*100);
+  document.getElementById('scoreCircle').style.setProperty('--pct', pct);
+  document.getElementById('pctText').textContent = pct + '%';
+  document.getElementById('cvScore').textContent = cvCorrect + '/20';
+  document.getElementById('ctScore').textContent = ctCorrect + '/30';
+  document.getElementById('totalScore').textContent = score + '/50';
+
+  let msg = `${studentName}, here's how you did.`;
+  document.getElementById('resultIntro').textContent = msg;
+}
+
+function sendResults(){
+  const btn = document.getElementById('sendBtn');
+  const statusEl = document.getElementById('sendStatus');
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  const pct = Math.round((score/questions.length)*100);
+  const payload = {
+    _subject: `Quiz Result: ${studentName} scored ${score}/50 (${pct}%)`,
+    "Student Name": studentName,
+    "Student Email": studentEmail,
+    "Total Score": `${score} / ${questions.length}`,
+    "Percentage": `${pct}%`,
+    "Computer Vision Score": `${cvCorrect} / 20`,
+    "CT & AI Literacy Score": `${ctCorrect} / 30`,
+    "Quiz Title": "Computer Vision & AI Literacy Quiz",
+    _captcha: "false",
+    _template: "table"
+  };
+
+  fetch(`https://formsubmit.co/ajax/${RECEIVER_EMAIL}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    statusEl.className = 'status-msg ok';
+    statusEl.textContent = " Your result has been submitted successfully!";
+    btn.textContent = "Result Submitted";
+  })
+  .catch(err => {
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = "⚠️ Could not submit automatically. Please screenshot your score and share it manually.";
+    btn.disabled = false;
+    btn.textContent = "Retry Submission";
+  });
+}
+</script>
+</body>
+</html>
