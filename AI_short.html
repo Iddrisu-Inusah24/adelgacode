@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>AI Agents • Robotics • Ethics — Fill-in Quiz</title>
+<style>
+  :root{
+    --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
+    --accent:#6dd5ed; --accent2:#2193b0;
+    --correct:#2ecc71; --wrong:#e74c3c; --card:#161327cc;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    background-size:200% 200%; animation:bgshift 18s ease infinite;
+    color:#fff; display:flex; justify-content:center; padding:16px;
+  }
+  @keyframes bgshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .wrap{width:100%; max-width:640px;}
+
+  /* --- Gate --- */
+  #gate{ display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; text-align:center;}
+  #gate h1{font-size:1.4rem; margin-bottom:6px;}
+  #gate p{color:#cfd8ff; font-size:.9rem; margin-top:0;}
+  #gate input{
+    padding:14px 16px; border-radius:12px; border:1px solid #4a4a7a; background:#1b1836;
+    color:#fff; font-size:1rem; width:80%; max-width:280px; text-align:center; margin-top:18px;
+  }
+  #gate button{
+    margin-top:14px; padding:12px 28px; border:none; border-radius:30px; font-size:1rem; font-weight:600;
+    background:linear-gradient(90deg,var(--accent2),var(--accent)); color:#03222b; cursor:pointer;
+  }
+  #gateErr{color:#ff8080; height:18px; margin-top:8px; font-size:.85rem;}
+
+  /* --- Quiz --- */
+  #quiz{display:none;}
+  header.hd{text-align:center; margin-bottom:14px;}
+  header.hd h1{font-size:1.3rem; margin:0 0 4px;}
+  header.hd p{color:#b9c2ff; font-size:.8rem; margin:0;}
+
+  .progressBar{background:#1b1836; border-radius:20px; height:10px; overflow:hidden; margin:14px 0 6px;}
+  .progressFill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent2),var(--accent)); transition:width .35s;}
+  .meta{display:flex; justify-content:space-between; font-size:.8rem; color:#b9c2ff; margin-bottom:16px;}
+
+  .card{
+    background:var(--card); border:1px solid #35315f; border-radius:18px; padding:22px 20px;
+    backdrop-filter:blur(6px); box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
+  .qnum{font-size:.75rem; letter-spacing:1px; color:var(--accent); font-weight:700; text-transform:uppercase; margin-bottom:6px;}
+  .qtext{font-size:1.05rem; line-height:1.5; margin-bottom:16px;}
+  .blank-hl{color:var(--accent); font-weight:700;}
+
+  input.ans{
+    width:100%; padding:13px 14px; font-size:1rem; border-radius:10px; border:2px solid #40406a;
+    background:#100e22; color:#fff; outline:none; transition:border .2s;
+  }
+  input.ans:focus{border-color:var(--accent);}
+  input.ans.correct{border-color:var(--correct); background:#0f2a1c;}
+  input.ans.wrong{border-color:var(--wrong); background:#2a0f14;}
+
+  .feedback{margin-top:10px; font-size:.88rem; min-height:20px; font-weight:600;}
+  .feedback.correct{color:var(--correct);}
+  .feedback.wrong{color:var(--wrong);}
+  .explain{margin-top:6px; font-size:.82rem; color:#c8cdf5; display:none;}
+
+  .btnrow{display:flex; gap:10px; margin-top:18px;}
+  button.act{
+    flex:1; padding:13px; border:none; border-radius:12px; font-size:.95rem; font-weight:700; cursor:pointer;
+    background:linear-gradient(90deg,var(--accent2),var(--accent)); color:#03222b;
+  }
+  button.act:disabled{opacity:.4; cursor:not-allowed;}
+  button.skip{background:#2a2750; color:#cfd6ff;}
+
+  #resultScreen{display:none; text-align:center;}
+  #resultScreen h2{font-size:1.6rem; margin-bottom:6px;}
+  .scoreCircle{
+    width:150px; height:150px; border-radius:50%; margin:18px auto;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    background:conic-gradient(var(--accent) calc(var(--pct)*1%), #23204a 0);
+  }
+  .scoreCircle .inner{
+    width:118px; height:118px; border-radius:50%; background:#161327; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  .scoreCircle .inner b{font-size:1.7rem;}
+  .scoreCircle .inner span{font-size:.75rem; color:#b9c2ff;}
+  .topicBreak{text-align:left; margin-top:20px;}
+  .topicBreak h3{font-size:.9rem; color:var(--accent); margin-bottom:8px;}
+  .tRow{display:flex; justify-content:space-between; font-size:.85rem; padding:6px 0; border-bottom:1px solid #2a2750;}
+  #restartBtn{margin-top:22px;}
+  footer.brand{text-align:center; margin-top:22px; font-size:.72rem; color:#7a7fb0; letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- PASSWORD GATE -->
+  <div id="gate">
+    <h1>🔒 AI, Robotics &amp; Ethics Quiz</h1>
+    <p>Enter the access code to begin</p>
+    <input id="pwInput" type="password" placeholder="Access code" autocomplete="off">
+    <div id="gateErr"></div>
+    <button onclick="checkPassword()">Unlock Quiz</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz">
+    <header class="hd">
+      <h1>AI Agents • Educational Robotics • AI Ethics</h1>
+      <p>20 challenging fill-in-the-blank questions</p>
+    </header>
+    <div class="progressBar"><div class="progressFill" id="progressFill"></div></div>
+    <div class="meta"><span id="qCounter">Question 1 / 20</span><span id="liveScore">Score: 0</span></div>
+
+    <div class="card" id="qCard">
+      <div class="qnum" id="qTopic">TOPIC</div>
+      <div class="qtext" id="qText"></div>
+      <input type="text" class="ans" id="ansInput" placeholder="Type your answer..." autocomplete="off">
+      <div class="feedback" id="feedback"></div>
+      <div class="explain" id="explain"></div>
+      <div class="btnrow">
+        <button class="act skip" id="skipBtn" onclick="skipQ()">Skip</button>
+        <button class="act" id="checkBtn" onclick="checkAnswer()">Check Answer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultScreen">
+    <h2>Quiz Complete 🎉</h2>
+    <div class="scoreCircle" id="scoreCircle" style="--pct:0">
+      <div class="inner"><b id="finalScore">0/20</b><span>Correct</span></div>
+    </div>
+    <p id="scoreMsg"></p>
+    <div class="topicBreak">
+      <h3>Score by Topic</h3>
+      <div id="topicList"></div>
+    </div>
+    <button class="act" id="restartBtn" onclick="restartQuiz()">Try Again</button>
+  </div>
+
+  <footer class="brand">adelgacode</footer>
+</div>
+
+<script>
+const PASSWORD = "adelgacode";
+
+function checkPassword(){
+  const val = document.getElementById('pwInput').value.trim();
+  if(val === PASSWORD){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    renderQuestion();
+  } else {
+    document.getElementById('gateErr').textContent = "Incorrect code. Try again.";
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPassword(); });
+
+// ---- Question bank ----
+const questions = [
+  {topic:"AI Agents", text:"In the AI Agent Architecture, the four nested layers from innermost to outermost are: AI Agent, AI Brain/Provider, System Prompt, and Tools/______.", answers:["actions","action"], explain:"The outer layer represents the Tools/Actions the agent can call to interact with the world."},
+  {topic:"AI Agents", text:"The layer that sits directly around the 'AI Brain/Provider' and instructs it on its role and behavior is called the System ______.", answers:["prompt"], explain:"The System Prompt configures how the underlying model (the 'brain') should behave."},
+  {topic:"AI Agents", text:"The innermost circle of the AI Agent Architecture diagram, representing the central entity, is simply labeled the AI ______.", answers:["agent"], explain:"The AI Agent is the central entity that everything else supports."},
+  {topic:"Robotics Programming", text:"Scratch and Blockly are examples of ______-based programming, using interlocking visual pieces instead of typed syntax.", answers:["block","blocks"], explain:"Block-based programming reduces cognitive load by eliminating syntax errors."},
+  {topic:"Robotics Programming", text:"______-based programming (Python, C++, JavaScript) provides direct transfer to professional coding skills but has a steeper learning curve.", answers:["text"], explain:"Text-based programming aligns with real industry languages and tools."},
+  {topic:"Robotics Programming", text:"Microsoft ______ is a dual-mode platform that lets learners toggle between blocks and JavaScript.", answers:["makecode"], explain:"Microsoft MakeCode is used with micro:bit and other platforms for a block/JavaScript transition."},
+  {topic:"Robotics Programming", text:"LEGO SPIKE Prime follows a Block to ______ learning pathway as students advance.", answers:["python"], explain:"SPIKE Prime scaffolds students from blocks toward writing Python code."},
+  {topic:"Robotics Programming", text:"Research indicates the optimal age range for transitioning from block-based to text-based programming is ______ years old.", answers:["11-14","11 to 14","11–14"], explain:"This roughly corresponds to middle school, matching students' developing abstract thinking."},
+  {topic:"Robotics Programming", text:"In the age-appropriateness matrix, High School (grades 9–12) is predominantly ______-based, with some visual support.", answers:["text"], explain:"By high school, students are expected to handle syntax-heavy, industry-aligned languages."},
+  {topic:"Robotics Scaffolding", text:"______ refers to the temporary support structures that help learners progressively achieve independence in robotics education.", answers:["scaffolding"], explain:"Scaffolding is gradually removed as a learner's competence increases."},
+  {topic:"Robotics Scaffolding", text:"The four scaffolding types in robotics education are Conceptual, Procedural, Strategic, and ______.", answers:["metacognitive"], explain:"Metacognitive scaffolding involves self-reflection on one's own learning process."},
+  {topic:"Robotics Cross-Curricular", text:"The integrated STEAM framework in robotics education draws on ______'s constructionist learning principles.", answers:["papert","seymour papert"], explain:"Seymour Papert's constructionism emphasizes learning through building tangible things."},
+  {topic:"Robotics Cross-Curricular", text:"In robotics programming for Arduino, ROS stands for Robot ______ System.", answers:["operating"], explain:"ROS (Robot Operating System) is commonly programmed using C/C++."},
+  {topic:"Robotics Cross-Curricular", text:"RobotC and LOGO are described in the deck as examples of ______ languages used in robotics education.", answers:["specialized"], explain:"These are niche, purpose-built languages distinct from general languages like Python or C++."},
+  {topic:"AI Ethics", text:"The ethical principle requiring that AI benefit learners without causing harm is called ______.", answers:["beneficence","non-maleficence","beneficence and non-maleficence"], explain:"Beneficence and non-maleficence together mean 'do good, avoid harm.'"},
+  {topic:"AI Ethics", text:"The ethical principle of ______ requires preserving human agency and maintaining meaningful human oversight in learning decisions.", answers:["autonomy"], explain:"Autonomy protects the learner's and educator's ability to make their own decisions."},
+  {topic:"AI Ethics", text:"______ (Family Educational Rights and Privacy Act) is a key U.S. legal framework protecting student data.", answers:["ferpa"], explain:"FERPA governs access to and disclosure of student education records in the U.S."},
+  {topic:"AI Ethics", text:"______ (Children's Online Privacy Protection Act) specifically protects the online privacy of minors.", answers:["coppa"], explain:"COPPA restricts how companies can collect data from children online."},
+  {topic:"AI Ethics", text:"______ bias occurs when AI training data reflects past discrimination, perpetuating existing inequalities.", answers:["historical"], explain:"Historical bias is baked into data because society's past decisions were themselves unequal."},
+  {topic:"AI Ethics", text:"According to the Responsible Implementation Framework, Phase 1 is 'Planning and ______,' covering stakeholder engagement and equity impact analysis.", answers:["assessment"], explain:"Phase 1 (Planning & Assessment) precedes Procurement/Development and Deployment/Monitoring."}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const results = []; // {topic, correct}
+
+function renderQuestion(){
+  answered = false;
+  const q = questions[current];
+  document.getElementById('qTopic').textContent = q.topic;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('qCounter').textContent = `Question ${current+1} / ${questions.length}`;
+  document.getElementById('liveScore').textContent = `Score: ${score}`;
+  document.getElementById('progressFill').style.width = `${(current/questions.length)*100}%`;
+  const inp = document.getElementById('ansInput');
+  inp.value = ''; inp.className = 'ans'; inp.disabled = false;
+  inp.focus();
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('explain').style.display = 'none';
+  document.getElementById('checkBtn').textContent = 'Check Answer';
+  document.getElementById('checkBtn').disabled = false;
+  document.getElementById('skipBtn').style.display = 'inline-block';
+}
+
+function normalize(s){
+  return s.toLowerCase().trim().replace(/[.,!?]/g,'');
+}
+
+function checkAnswer(){
+  if(answered){ nextQuestion(); return; }
+  const q = questions[current];
+  const inp = document.getElementById('ansInput');
+  const val = normalize(inp.value);
+  const isCorrect = q.answers.some(a => normalize(a) === val) && val.length>0;
+
+  answered = true;
+  const fb = document.getElementById('feedback');
+  const ex = document.getElementById('explain');
+  ex.style.display = 'block';
+  ex.textContent = `💡 ${q.explain}`;
+
+  if(isCorrect){
+    inp.className = 'ans correct';
+    fb.className = 'feedback correct';
+    fb.textContent = '✓ Correct!';
+    score++;
+  } else {
+    inp.className = 'ans wrong';
+    fb.className = 'feedback wrong';
+    fb.textContent = `✗ Not quite. Correct answer: ${q.answers[0]}`;
+  }
+  results.push({topic:q.topic, correct:isCorrect});
+  document.getElementById('liveScore').textContent = `Score: ${score}`;
+  document.getElementById('checkBtn').textContent = current === questions.length-1 ? 'See Results' : 'Next Question →';
+  document.getElementById('skipBtn').style.display = 'none';
+  inp.disabled = true;
+}
+
+function skipQ(){
+  const q = questions[current];
+  results.push({topic:q.topic, correct:false});
+  nextQuestion();
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= questions.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+document.getElementById('ansInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter') checkAnswer();
+});
+
+function showResults(){
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  const pct = Math.round((score/questions.length)*100);
+  document.getElementById('scoreCircle').style.setProperty('--pct', pct);
+  document.getElementById('finalScore').textContent = `${score}/${questions.length}`;
+  let msg;
+  if(pct>=90) msg="Outstanding! You've mastered this material.";
+  else if(pct>=70) msg="Great work! Solid understanding overall.";
+  else if(pct>=50) msg="Good effort — review the topics you missed.";
+  else msg="Keep studying — revisit the slides and try again.";
+  document.getElementById('scoreMsg').textContent = msg;
+
+  const byTopic = {};
+  results.forEach(r=>{
+    if(!byTopic[r.topic]) byTopic[r.topic] = {correct:0,total:0};
+    byTopic[r.topic].total++;
+    if(r.correct) byTopic[r.topic].correct++;
+  });
+  const list = document.getElementById('topicList');
+  list.innerHTML = '';
+  Object.keys(byTopic).forEach(t=>{
+    const d = byTopic[t];
+    const row = document.createElement('div');
+    row.className = 'tRow';
+    row.innerHTML = `<span>${t}</span><span>${d.correct}/${d.total}</span>`;
+    list.appendChild(row);
+  });
+}
+
+function restartQuiz(){
+  current = 0; score = 0; answered = false; results.length = 0;
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+}
+</script>
+</body>
+</html>
