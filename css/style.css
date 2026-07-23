@@ -136,23 +136,7 @@ main {
 }
 
 /* Highlight the CTA-style link (Take Quiz) */
-.nav-links li:last-child a {
-    background: #cff60a;
-    color: #0d0f1a;
-    padding: 0.5rem 1.1rem;
-    border-radius: 6px;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
 
-.nav-links li:last-child a:hover {
-    background: #e2ff4a;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(207, 246, 10, 0.3);
-}
-
-.nav-links li:last-child a::after {
-    display: none;
-}
 
 /* SCROLLED NAV */
 .navbar.scrolled {
