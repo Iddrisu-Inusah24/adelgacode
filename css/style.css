@@ -22,45 +22,95 @@ main {
 /* ===== NAVBAR ===== */
 .navbar {
     width: 100%;
-    padding: 1.2rem 6%;
+    padding: 1rem 6%;
     position: fixed;
     top: 0;
     left: 0;
-    background: rgb(76, 76, 245);
+    background: rgb(10, 12, 28);
+    border-bottom: 1px solid rgba(207, 246, 10, 0.12);
     z-index: 1000;
+    transition: background 0.35s ease, padding 0.35s ease, box-shadow 0.35s ease;
 }
 
 .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* LOGO */
-.logo {
+/* .logo {
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
     font-weight: 800;
-    font-size: 1.1rem;
-    border: 1px solid #cff60a;
-    padding: 2px;
-    background-color: #111;
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+    border: 1.5px solid #cff60a;
+    border-radius: 8px;
+    padding: 0.4rem 0.85rem;
+    background: linear-gradient(135deg, #0d0f1a, #16192b);
     color: #cff60a;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+} */
+ 
+.logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.blue {
+    color: #4285F4;
+}
+
+.red {
+    color: #EA4335;
+}
+
+.yellow {
+    color: #FBBC05;
+}
+
+.green {
+    color: #34A853;
+}
+
+.logo:hover {
+    color: #0d0f1a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(207, 246, 10, 0.25);
 }
 
 /* NAV LINKS (DESKTOP) */
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: 2.2rem;
 }
 
 .nav-links a {
     text-decoration: none;
-    font-size: 0.98rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    color: #f8f6f6;
+    letter-spacing: 0.01em;
+    color: #e7e7ef;
     position: relative;
+    padding-bottom: 4px;
     transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #cff60a;
 }
 
 /* Underline animation */
@@ -68,10 +118,11 @@ main {
     content: "";
     position: absolute;
     left: 0;
-    bottom: -6px;
+    bottom: -2px;
     width: 0%;
     height: 2px;
-    background-color: #f02906a9;
+    background-color: #cff60a;
+    border-radius: 2px;
     transition: width 0.3s ease;
 }
 
@@ -80,53 +131,124 @@ main {
     width: 100%;
 }
 
-/* SCROLLED NAV */
-.navbar.scrolled {
-    background: rgba(85, 86, 85, 0.95);
-    backdrop-filter: blur(6px);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+.nav-links a.active {
+    color: #cff60a;
 }
 
-/* ===== TOGGLE BUTTON ===== */
+/* Highlight the CTA-style link (Take Quiz) */
+.nav-links li:last-child a {
+    background: #cff60a;
+    color: #0d0f1a;
+    padding: 0.5rem 1.1rem;
+    border-radius: 6px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.nav-links li:last-child a:hover {
+    background: #e2ff4a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(207, 246, 10, 0.3);
+}
+
+.nav-links li:last-child a::after {
+    display: none;
+}
+
+/* SCROLLED NAV */
+.navbar.scrolled {
+    padding: 0.65rem 6%;
+    background: rgba(10, 12, 28, 0.92);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== TOGGLE BUTTON (animated hamburger) ===== */
 .nav-toggle {
     display: none;
-    font-size: 1.8rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 30px;
+    height: 30px;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.nav-toggle .bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #f8f6f6;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.nav-toggle[aria-expanded="true"] .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background-color: #cff60a;
+}
+
+.nav-toggle[aria-expanded="true"] .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background-color: #cff60a;
 }
 
 @media (max-width: 768px) {
 
     .nav-toggle {
-        display: block;
-        color: #111;
+        display: flex;
     }
 
     .nav-links {
         position: absolute;
-        top: 100%;
+        top: calc(100% + 0.6rem);
         right: 6%;
-        background: #3623da;
+        left: 6%;
+        background: rgba(13, 15, 26, 0.98);
+        backdrop-filter: blur(10px);
 
         flex-direction: column;
-        gap: 1.2rem;
-        padding: 1.2rem;
+        align-items: flex-start;
+        gap: 1.1rem;
+        padding: 1.5rem;
 
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        border: 1px solid rgba(207, 246, 10, 0.15);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
 
-        display: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
     }
 
     .nav-links.show {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
 
-    /* 🔑 IMPORTANT: style links directly */
     .nav-links a {
+        display: block;
+        width: 100%;
         color: #fff;
         font-weight: 500;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links li:last-child a {
+        display: inline-block;
+        text-align: center;
     }
 }
 
@@ -427,4 +549,3 @@ main {
 .social:hover {
     transform: translateY(-3px);
 }
-

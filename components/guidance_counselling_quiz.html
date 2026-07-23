@@ -1,0 +1,525 @@
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .quiz-wrap{
+    max-width:900px;
+    margin:auto;
+    padding:2rem;
+    font-family:'Inter',sans-serif;
+}
+
+.progress-bar{
+    height:8px;
+    background:var(--color-background-secondary);
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:2rem;
+}
+
+.progress-fill{
+    height:100%;
+    background:#1D9E75;
+    transition:width .35s;
+}
+
+.q-counter{
+    font-size:15px;
+    color:var(--color-text-secondary);
+    margin-bottom:.8rem;
+    font-weight:500;
+}
+
+.q-text{
+    font-size:1.35rem;
+    line-height:1.7;
+    font-weight:600;
+    color:var(--color-text-primary);
+    margin-bottom:1rem;
+}
+
+.hint{
+    font-size:.95rem;
+    color:var(--color-text-secondary);
+    margin-bottom:1rem;
+    line-height:1.6;
+}
+
+.ans-input{
+    width:100%;
+    min-height:140px;
+    padding:18px;
+    border-radius:10px;
+    border:1px solid var(--color-border-secondary);
+    font-size:17px;
+    line-height:1.7;
+    resize:vertical;
+    transition:.25s;
+    margin-bottom:1rem;
+    box-sizing:border-box;
+}
+
+.ans-input:focus{
+    outline:none;
+    border-color:#1D9E75;
+    box-shadow:0 0 0 3px rgba(29,158,117,.18);
+}
+
+.btn-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+button{
+    min-width:170px;
+    padding:14px 24px;
+    font-size:16px;
+    font-weight:600;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+button.primary{
+    background:#1D9E75;
+    color:white;
+    border:none;
+}
+
+button.primary:hover{
+    background:#157d5e;
+    transform:translateY(-2px);
+}
+
+.feedback{
+    margin-top:1.5rem;
+    padding:18px;
+    border-radius:10px;
+    line-height:1.8;
+    font-size:16px;
+}
+
+.score-card{
+    text-align:center;
+    padding:3rem 1rem;
+}
+
+.score-num{
+    font-size:4rem;
+    font-weight:700;
+    color:#1D9E75;
+}
+
+.score-label{
+    margin-top:.6rem;
+    font-size:1.2rem;
+}
+
+.review-item{
+    padding:18px;
+    border-radius:10px;
+    margin-bottom:18px;
+}
+
+.review-q{
+    font-size:17px;
+    font-weight:600;
+    line-height:1.6;
+    margin-bottom:.7rem;
+}
+
+.review-a{
+    font-size:15px;
+    line-height:1.7;
+    margin-bottom:.5rem;
+}
+
+.tag{
+    display:inline-block;
+    padding:4px 10px;
+    font-size:12px;
+    font-weight:600;
+    border-radius:20px;
+}
+
+.section-badge{
+    display:inline-block;
+    margin-bottom:1rem;
+    padding:5px 12px;
+    font-size:13px;
+    font-weight:600;
+    border-radius:30px;
+}
+/* ===========================
+   TABLETS
+=========================== */
+
+@media (max-width:768px){
+
+.quiz-wrap{
+    padding:1.5rem;
+}
+
+.q-text{
+    font-size:1.2rem;
+}
+
+button{
+    width:100%;
+}
+
+.btn-row{
+    flex-direction:column;
+}
+
+.score-num{
+    font-size:3rem;
+}
+
+.review-q{
+    font-size:16px;
+}
+
+}
+
+
+/* ===========================
+   PHONES
+=========================== */
+
+@media (max-width:480px){
+
+.quiz-wrap{
+    padding:1rem;
+}
+
+.q-counter{
+    font-size:14px;
+}
+
+.q-text{
+    font-size:1.1rem;
+    line-height:1.65;
+}
+
+.hint{
+    font-size:.9rem;
+}
+
+.ans-input{
+    font-size:16px;
+    min-height:120px;
+    padding:14px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    font-size:16px;
+}
+
+.feedback{
+    font-size:15px;
+    padding:15px;
+}
+
+.score-num{
+    font-size:2.5rem;
+}
+
+.score-label{
+    font-size:1rem;
+}
+
+.review-item{
+    padding:14px;
+}
+
+.review-q{
+    font-size:15px;
+}
+
+.review-a{
+    font-size:14px;
+}
+
+.tag{
+    display:block;
+    width:max-content;
+    margin-bottom:8px;
+}
+
+}
+</style>
+
+<div class="quiz-wrap">
+  <h2 class="sr-only">Guidance and Counselling Quiz — Units 3, 4 and 5</h2>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div id="quiz-area"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    unit: "Unit 3",
+    q: "The role of guidance functionaries — name THREE roles of the School Counsellor.",
+    hint: "Think about planning, counselling, and services offered...",
+    keywords: [["plan","develop","programme"],["counsel","counselling"],["consult","consultation"],["information","service"],["placement"],["research"],["public relation","PRO"]],
+    minMatches: 3,
+    model: "Any 3 of: plan and develop the guidance programme; offer counselling to students and staff; offer consultation services to teachers/parents/administrators; provide information services (educational, personal-social, career/vocational); provide placement services; conduct research on social issues; serve as public relations officer.",
+  },
+  {
+    unit: "Unit 3",
+    q: "The headmaster/headmistress must establish and encourage a school guidance __________ to serve as an advisory and policy-recommending body.",
+    hint: "One word answer.",
+    keywords: [["committee"]],
+    minMatches: 1,
+    model: "committee",
+  },
+  {
+    unit: "Unit 3",
+    q: "List TWO roles of the Parent Teacher Association (PTA) or School Management Committee (SMC) in guidance.",
+    hint: "Think about money, observations, and resource persons...",
+    keywords: [["financial","finance","fund","money"],["observation","behaviour","behavior","undesirable"],["resource","talks","career"],["link","agencies","community"]],
+    minMatches: 2,
+    model: "Any 2 of: providing financial help to the guidance programme; making observations of students' undesirable behaviours to the counsellor; serving as resource persons for career/social talks; helping to link the school to agencies and organisations in the community.",
+  },
+  {
+    unit: "Unit 3",
+    q: "What is ONE role of the District Co-ordinator in guidance and counselling?",
+    hint: "Think about organising, developing, or disseminating...",
+    keywords: [["organis","develop","guidance service"],["professional","professional matter"],["in-service","workshop","seminar"],["career guidance","career development"],["disseminat","information","trends"],["project","institution"]],
+    minMatches: 1,
+    model: "Any 1 of: organising and developing guidance services in 1st and 2nd cycle institutions; dealing with professional matters of guidance co-ordinators; organising in-service courses/workshops; developing career guidance programmes; disseminating information on new trends; establishing guidance projects in institutions.",
+  },
+  {
+    unit: "Unit 3",
+    q: "Teachers assist in identifying the problems of students and __________ such problems to the counsellor.",
+    hint: "One word — what do teachers do with problems they identify?",
+    keywords: [["refer","referral"]],
+    minMatches: 1,
+    model: "refer",
+  },
+  {
+    unit: "Unit 4",
+    q: "List FOUR guidance services as identified by Makinde (1987).",
+    hint: "Think of orientation, appraisal, information, placement, and follow-up...",
+    keywords: [["orientation","adaptive"],["appraisal","inventory"],["information","distributive"],["placement"],["follow-up","research","evaluation"]],
+    minMatches: 4,
+    model: "Orientation (Adaptive) Service; Appraisal (Inventory) Service; Informational (Distributive) Service; Planning and Placement Service; Follow-up, Research and Evaluation Service.",
+  },
+  {
+    unit: "Unit 4",
+    q: "The Appraisal Service collects data from four main areas. Name TWO of these areas.",
+    hint: "Think about mental ability, achievement, interest, and personality...",
+    keywords: [["mental ability","intelligence"],["achievement"],["interest"],["personality"]],
+    minMatches: 2,
+    model: "Any 2 of: Mental ability, Achievement, Interest, Personality characteristics.",
+  },
+  {
+    unit: "Unit 4",
+    q: "Distinguish between the TEST and NON-TEST techniques used in collecting appraisal data.",
+    hint: "One uses standardised tools, the other uses qualitative methods...",
+    keywords: [["standardis","standardiz","objective"],["non-test","qualitative","observation","interview","questionnaire","rating","cumulative"]],
+    minMatches: 2,
+    model: "Test techniques comprise standardised tests (objective, with determined reliability and validity). Non-test techniques are more qualitative and include observation, interviews, rating scales, sociograms, anecdotes, autobiographies, and cumulative records.",
+  },
+  {
+    unit: "Unit 4",
+    q: "Name the THREE types of information provided under the Information Service.",
+    hint: "Think about education, jobs, and personal life...",
+    keywords: [["educational"],["occupational","career","vocational"],["personal","social"]],
+    minMatches: 3,
+    model: "Educational information; Occupational (career) information; Personal-social information.",
+  },
+  {
+    unit: "Unit 4",
+    q: "Counselling is described as the __________ service of the guidance programme — the one around which all other services revolve.",
+    hint: "One word — it is the most central service.",
+    keywords: [["core","heart","central"]],
+    minMatches: 1,
+    model: "core (or heart)",
+  },
+  {
+    unit: "Unit 4",
+    q: "Shertzer and Stone (1976) identify TWO forms of placement. Pecku (1991) adds a third. Name all THREE.",
+    hint: "Think about school, work, and social life...",
+    keywords: [["educational","academic"],["vocational","career","employment"],["social"]],
+    minMatches: 3,
+    model: "Educational placement; Vocational placement; Social placement.",
+  },
+  {
+    unit: "Unit 4",
+    q: "What is the purpose of the Follow-Up Service in guidance?",
+    hint: "It happens AFTER counselling or placement is done...",
+    keywords: [["assess","progress","extent"],["maintain","goal","behaviour","behavior"],["further counsel","additional"],["modif","placement"]],
+    minMatches: 1,
+    model: "The follow-up service allows the counsellor to assess the progress of counsellees after counselling or placement has been terminated, check whether goals are maintained, give further counselling where needed, and suggest modifications to placement.",
+  },
+  {
+    unit: "Unit 4",
+    q: "The Evaluation Service is used to determine whether the __________ set for a guidance service or overall guidance programme are being achieved.",
+    hint: "One word — what are set at the beginning of any programme?",
+    keywords: [["objective","goal","aim"]],
+    minMatches: 1,
+    model: "objectives (or goals/aims)",
+  },
+  {
+    unit: "Unit 5",
+    q: "Hill and Lukey (1969) describe an effective guidance programme using the acronym PLEA. What do the four letters stand for?",
+    hint: "P-L-E-A...",
+    keywords: [["plan","planned"],["led","lead","leadership"],["execut"],["assess","evaluated"]],
+    minMatches: 4,
+    model: "P — Planned; L — Led; E — Executed; A — Assessed.",
+  },
+  {
+    unit: "Unit 5",
+    q: "Maslow (1954) classified human needs into five levels. List them in order from the most basic to the highest.",
+    hint: "Starts with physical survival and ends with self-actualisation...",
+    keywords: [["physical","survival","physiological"],["safety","security"],["social","love","belonging"],["self-esteem","self-respect","dignity"],["self-actualisa","personal growth"]],
+    minMatches: 4,
+    model: "1. Physical/Survival needs; 2. Safety/Security needs; 3. Social/Love and Belonging needs; 4. Self-Respect/Personal Dignity/Self-Esteem needs; 5. Personal Growth/Self-Actualisation.",
+  },
+  {
+    unit: "Unit 5",
+    q: "In organising the guidance programme, the counsellor must first conduct a __________ survey to plan a suitable guidance programme for the school.",
+    hint: "Two words — finding out what the school actually needs.",
+    keywords: [["needs assessment","need assessment","needs survey"]],
+    minMatches: 1,
+    model: "needs assessment (survey)",
+  },
+  {
+    unit: "Unit 5",
+    q: "Give TWO reasons why the support of the Headmaster is important in establishing a school guidance programme.",
+    hint: "Think about authority, resources, and policy...",
+    keywords: [["final say","authority","administrative head","policy"],["support","sustain","initiat"],["resource","facilit","fund","budget"],["staff","direct","manage"]],
+    minMatches: 2,
+    model: "The headmaster has the final say on administrative and policy issues in the school, so their support is crucial for initiating and sustaining an effective guidance programme, securing resources, and ensuring staff cooperation.",
+  },
+  {
+    unit: "Unit 5",
+    q: "What does the acronym PLEA remind us about in the context of running a school guidance programme?",
+    hint: "Think holistically — not just each letter but the overall message.",
+    keywords: [["plan","planned"],["led","lead"],["execut"],["assess","evaluat"]],
+    minMatches: 3,
+    model: "PLEA reminds us that a guidance programme must be Planned (not haphazard), effectively Led (well organised management), Executed (responsibilities carried out), and Assessed (evaluated regularly to determine effectiveness).",
+  },
+];
+
+let current = 0;
+let scores = [];
+let userAnswers = [];
+let submitted = false;
+
+function evaluate(userAns, q) {
+  const ans = userAns.toLowerCase();
+  let matched = 0;
+  for (const group of q.keywords) {
+    if (group.some(kw => ans.includes(kw.toLowerCase()))) matched++;
+  }
+  if (matched >= q.minMatches) return 'correct';
+  if (matched >= Math.ceil(q.minMatches / 2)) return 'partial';
+  return 'wrong';
+}
+
+function render() {
+  const area = document.getElementById('quiz-area');
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+
+  if (current >= questions.length) {
+    showResults();
+    return;
+  }
+
+  const q = questions[current];
+  submitted = false;
+  area.innerHTML = `
+    <div class="section-badge">${q.unit}</div>
+    <div class="q-counter">Question ${current + 1} of ${questions.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="hint"><i class="ti ti-bulb" aria-hidden="true"></i> ${q.hint}</div>
+    <textarea class="ans-input" id="ans" rows="3" placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button class="primary" onclick="submitAnswer()">Submit answer ↗</button>
+      ${current > 0 ? '' : ''}
+    </div>
+    <div class="feedback" id="fb"></div>
+  `;
+  document.getElementById('ans').focus();
+}
+
+function submitAnswer() {
+  const ans = document.getElementById('ans').value.trim();
+  if (!ans) { alert('Please type an answer first.'); return; }
+  if (submitted) return;
+  submitted = true;
+
+  const q = questions[current];
+  const result = evaluate(ans, q);
+  const score = result === 'correct' ? 1 : result === 'partial' ? 0.5 : 0;
+  scores.push(score);
+  userAnswers.push(ans);
+
+  const fb = document.getElementById('fb');
+  fb.style.display = 'block';
+  fb.className = 'feedback ' + result;
+
+  let icon = result === 'correct' ? '✓ Well done!' : result === 'partial' ? '~ Partially correct' : '✗ Not quite';
+  fb.innerHTML = `<strong>${icon}</strong><br><strong>Model answer:</strong> ${q.model}`;
+
+  const btn = document.querySelector('.btn-row');
+  btn.innerHTML += `<button class="primary" onclick="nextQ()" style="margin-top:0">Next question ↗</button>`;
+  document.getElementById('ans').disabled = true;
+}
+
+function nextQ() {
+  current++;
+  render();
+}
+
+function showResults() {
+  const total = scores.reduce((a, b) => a + b, 0);
+  const pct = Math.round((total / questions.length) * 100);
+  let grade = pct >= 80 ? '🎉 Excellent!' : pct >= 60 ? '👍 Good effort!' : pct >= 40 ? '📚 Keep revising!' : '💪 More study needed.';
+  document.getElementById('prog').style.width = '100%';
+
+  let reviewHtml = questions.map((q, i) => {
+    const s = scores[i];
+    const tag = s === 1 ? 'correct' : s === 0.5 ? 'partial' : 'wrong';
+    const label = s === 1 ? 'Correct' : s === 0.5 ? 'Partial' : 'Wrong';
+    return `<div class="review-item">
+      <div class="review-q"><span class="tag ${tag}">${label}</span>${q.q}</div>
+      <div class="review-a"><strong>Your answer:</strong> ${userAnswers[i]}</div>
+      <div class="review-a"><strong>Model answer:</strong> ${q.model}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="score-card">
+      <div class="score-num">${Math.round(total)}/${questions.length}</div>
+      <div class="score-label">${pct}% — ${grade}</div>
+      <div class="btn-row" style="justify-content:center;margin-top:1.5rem">
+        <button class="primary" onclick="restart()">Restart quiz ↗</button>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem">
+      <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem">Full review</p>
+      ${reviewHtml}
+    </div>
+  `;
+}
+
+function restart() {
+  current = 0; scores = []; userAnswers = []; submitted = false;
+  document.getElementById('prog').style.width = '0%';
+  render();
+}
+
+render();
+</script>
